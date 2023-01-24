@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">email-invitations</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="email_invitation_fragment_label">Email Invitation</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <string name="name_hint">Name</string>
+    <string name="email_hint">Email Address</string>
+
+    <string name="button_request_invite">Request Invite</string>
+
+</resources>
