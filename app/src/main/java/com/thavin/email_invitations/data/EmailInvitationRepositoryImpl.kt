@@ -1,5 +1,8 @@
 package com.thavin.email_invitations.data
 
+import com.thavin.email_invitations.data.model.ErrorResponse
+import com.thavin.email_invitations.data.model.Result
+import com.thavin.email_invitations.data.model.UserInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString

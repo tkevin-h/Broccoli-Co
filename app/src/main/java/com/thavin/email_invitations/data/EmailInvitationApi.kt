@@ -1,5 +1,6 @@
 package com.thavin.email_invitations.data
 
+import com.thavin.email_invitations.data.model.UserInfo
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers

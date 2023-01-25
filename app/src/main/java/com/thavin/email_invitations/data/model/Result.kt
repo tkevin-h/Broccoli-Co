@@ -1,4 +1,4 @@
-package com.thavin.email_invitations.data
+package com.thavin.email_invitations.data.model
 
 sealed class Result {
     data class Success(val message: String? = null) : Result()

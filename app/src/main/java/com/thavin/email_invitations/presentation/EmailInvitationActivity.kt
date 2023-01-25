@@ -3,7 +3,6 @@ package com.thavin.email_invitations.presentation
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -12,8 +11,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.snackbar.Snackbar
 import com.thavin.email_invitations.R
 import com.thavin.email_invitations.databinding.ActivityEmailInvitationBinding
-import com.thavin.email_invitations.databinding.ActivityMainBinding
-import com.thavin.email_invitations.presentation.viewmodel.EmailInvitationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
