@@ -7,6 +7,8 @@
     <string name="broccoli_co_title">Broccoli &amp; Co.</string>
     <string name="broccoli_co_description">Please tap the button below to request an invitation to our service</string>
 
+    <string name="broccoli_co_invited_description">You have already registered to our service tap the button bellow to cancel</string>
+
     <string name="name_hint">Name</string>
     <string name="email_hint">Email Address</string>
     <string name="confirm_email_hint">Confirm Email Address</string>
@@ -15,7 +17,12 @@
     <string name="confirm_email_validation_hint">Email address is not matching</string>
 
     <string name="button_request_invite">Request Invite</string>
+    <string name="button_cancel_invite">Cancel Invite</string>
 
     <string name="button_send_user_details">Send</string>
+
+    <string name="image_accessibility_description">Congratulations Image</string>
+    <string name="success_title">Congratulations you are now invited!</string>
+    <string name="button_success">Done</string>
 
 </resources>

@@ -7,8 +7,10 @@
     tools:context=".presentation.EmailInvitationActivity">
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearlayout_request_invite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:padding="24dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
@@ -41,5 +43,44 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/button_request_invite" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearlayout_invited"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:padding="24dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textview_invited_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:text="@string/broccoli_co_title" />
+
+        <TextView
+            android:id="@+id/textview_invited__subtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:paddingBottom="16dp"
+            android:gravity="center"
+            android:text="@string/broccoli_co_invited_description" />
+
+        <Button
+            android:id="@+id/button_cancel_invite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_cancel_invite" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.constraintlayout.widget.ConstraintLayout>

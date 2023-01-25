@@ -39,6 +39,10 @@ class EmailInvitationViewModel @Inject constructor(
         data class ValidateEmail(val email: String) : UiEvent()
 
         data class ValidateConfirmEmail(val confirmEmail: String) : UiEvent()
+
+        object DismissDialogOnClick : UiEvent()
+
+        object CancelInviteOnClick : UiEvent()
     }
 
     fun onRequestInviteClicked(name: String, email: String) {
@@ -94,5 +98,4 @@ class EmailInvitationViewModel @Inject constructor(
         isConfirmEmailValid = true
         return true
     }
-
 }

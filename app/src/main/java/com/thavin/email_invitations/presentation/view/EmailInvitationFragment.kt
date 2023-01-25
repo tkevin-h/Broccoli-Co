@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -24,7 +23,7 @@ class EmailInvitationFragment : Fragment() {
     private var _binding: FragmentEmailInvitationBinding? = null
     private val binding get() = _binding!!
 
-    private val userDetailsDialogFragment = UserDetailsDialogFragment()
+    private val userDetailsDialogFragment = UserDetailsDialogFragment(testfun = {name, email -> viewModel.onRequestInviteClicked(name, email)})
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,16 +66,25 @@ class EmailInvitationFragment : Fragment() {
                             it.confirmEmail
                         )
                         is EmailInvitationViewModel.UiEvent.Loading -> userDetailsDialogFragment.showLoadingProgressBar()
-                        is EmailInvitationViewModel.UiEvent.Complete -> userDetailsDialogFragment.showSendButton()
+                        is EmailInvitationViewModel.UiEvent.Complete -> userDetailsDialogFragment.showSuccess()
+                        is EmailInvitationViewModel.UiEvent.DismissDialogOnClick -> userDetailsDialogFragment.dismissDialog()
+                        else -> {}
                     }
                 }
             }
         }
 
     private fun setupBinding() =
-        binding.buttonRequestUserDetails.setOnClickListener {
-            viewModel.sendUiEvent(EmailInvitationViewModel.UiEvent.RequestInviteOnClick)
+        with(binding) {
+            buttonRequestUserDetails.setOnClickListener {
+                viewModel.sendUiEvent(EmailInvitationViewModel.UiEvent.RequestInviteOnClick)
+            }
+
+            buttonCancelInvite.setOnClickListener {
+                viewModel.sendUiEvent(EmailInvitationViewModel.UiEvent.CancelInviteOnClick)
+            }
         }
+
 
     private fun setValidateNameVisibility(name: String) {
         if (viewModel.validateName(name)) {
@@ -123,6 +131,10 @@ class EmailInvitationFragment : Fragment() {
         userDetailsDialogFragment.setConfirmEmailValidationListener { confirmEmail ->
             viewModel.sendUiEvent(EmailInvitationViewModel.UiEvent.ValidateConfirmEmail(confirmEmail))
         }
+
+        userDetailsDialogFragment.setSuccessDoneButtonListener {
+            viewModel.sendUiEvent(EmailInvitationViewModel.UiEvent.DismissDialogOnClick)
+        }
     }
 
     private fun showUserDetailsDialogFragment() =
@@ -134,4 +146,8 @@ class EmailInvitationFragment : Fragment() {
                 UserDetailsDialogFragment.USER_DETAILS_TAG
             )
         }
+
+    private fun showCancelInviteDialog() {
+
+    }
 }
