@@ -16,13 +16,14 @@ import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.thavin.email_invitations.R
 
-class UserDetailsDialogFragment(testfun: (name: String, email: String) -> Unit) : DialogFragment() {
+class UserDetailsDialogFragment(
+    private val sendUserDetails: (name: String, email: String) -> Unit,
+    private val validateName: (name: String) -> Unit,
+    private val validateEmail: (name: String) -> Unit,
+    private val validateConfirmEmail: (name: String) -> Unit,
+    private val done: () -> Unit
+) : DialogFragment() {
 
-    private lateinit var sendUserDetailsButtonListener: (name: String, email: String) -> Unit
-    private lateinit var nameValidationListener: (name: String) -> Unit
-    private lateinit var emailValidationListener: (email: String) -> Unit
-    private lateinit var confirmEmailValidationListener: (email: String) -> Unit
-    private lateinit var successButtonListener: () -> Unit
     private lateinit var binding: View
 
     companion object {
@@ -39,39 +40,19 @@ class UserDetailsDialogFragment(testfun: (name: String, email: String) -> Unit) 
             val email = binding.findViewById<EditText>(R.id.edittext_email).text.toString()
             val confirmEmail = binding.findViewById<EditText>(R.id.edittext_confirm_email).text.toString()
 
-            nameValidationListener(name)
-            emailValidationListener(email)
-            confirmEmailValidationListener(confirmEmail)
-            sendUserDetailsButtonListener(name, email)
+            validateName(name)
+            validateEmail(email)
+            validateConfirmEmail(confirmEmail)
+            sendUserDetails(name, email)
         }
 
         binding.findViewById<Button>(R.id.button_success).setOnClickListener {
-            successButtonListener()
+            done()
         }
 
         return AlertDialog.Builder(requireContext())
             .setView(binding)
             .create()
-    }
-
-    fun setSendUserDetailsListener(listener: (name: String, email: String) -> Unit) {
-        sendUserDetailsButtonListener = listener
-    }
-
-    fun setNameValidationListener(listener: (name: String) -> Unit) {
-        nameValidationListener = listener
-    }
-
-    fun setEmailValidationListener(listener: (email: String) -> Unit) {
-        emailValidationListener = listener
-    }
-
-    fun setConfirmEmailValidationListener(listener: (email: String) -> Unit) {
-        confirmEmailValidationListener = listener
-    }
-
-    fun setSuccessDoneButtonListener(listener: () -> Unit) {
-        successButtonListener = listener
     }
 
     fun dismissDialog() {

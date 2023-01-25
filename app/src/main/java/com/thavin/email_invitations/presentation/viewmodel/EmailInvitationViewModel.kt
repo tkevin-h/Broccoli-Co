@@ -34,6 +34,8 @@ class EmailInvitationViewModel @Inject constructor(
 
         object Complete : UiEvent()
 
+        object InvalidName : UiEvent()
+        object ValidName : UiEvent()
         data class ValidateName(val name: String) : UiEvent()
 
         data class ValidateEmail(val email: String) : UiEvent()
@@ -45,7 +47,20 @@ class EmailInvitationViewModel @Inject constructor(
         object CancelInviteOnClick : UiEvent()
     }
 
-    fun onRequestInviteClicked(name: String, email: String) {
+    private fun sendUiEvent(event: UiEvent) =
+        viewModelScope.launch {
+            _uiEvent.send(event)
+        }
+
+    fun requestInvitationOnClick() {
+        sendUiEvent(UiEvent.RequestInviteOnClick)
+    }
+
+    fun cancelInvitationOnClick() {
+        sendUiEvent(UiEvent.CancelInviteOnClick)
+    }
+
+    fun sendUserDetailsOnClick(name: String, email: String) {
         if (isNameValid && isEmailValid && isConfirmEmailValid) {
             sendUiEvent(UiEvent.Loading)
             viewModelScope.launch {
@@ -62,19 +77,14 @@ class EmailInvitationViewModel @Inject constructor(
         }
     }
 
-    fun sendUiEvent(event: UiEvent) =
-        viewModelScope.launch {
-            _uiEvent.send(event)
-        }
-
-    fun validateName(name: String): Boolean {
+    fun validateName(name: String) {
         if (name.length <= 3) {
             isNameValid = false
-            return false
+            sendUiEvent(UiEvent.InvalidName)
+        } else {
+            isNameValid = true
+            sendUiEvent(UiEvent.ValidName)
         }
-
-        isNameValid = true
-        return true
     }
 
     fun validateEmail(email: String): Boolean {
@@ -97,5 +107,9 @@ class EmailInvitationViewModel @Inject constructor(
 
         isConfirmEmailValid = true
         return true
+    }
+
+    fun dismissDialogOnClick() {
+        sendUiEvent(UiEvent.DismissDialogOnClick)
     }
 }
