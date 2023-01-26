@@ -38,6 +38,8 @@ class InvitationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.checkInviteStatus()
+
         setupBinding()
         setupInviteDetailsDialog()
         setupCancelInviteDialog()
@@ -73,7 +75,6 @@ class InvitationFragment : Fragment() {
                             is CancelInviteSuccess -> cancelInviteDialog?.showSuccess()
                             is DismissCancelInviteDialogOnClick -> cancelInviteDialog?.dismissDialog()
                         }
-
                 }
             }
         }

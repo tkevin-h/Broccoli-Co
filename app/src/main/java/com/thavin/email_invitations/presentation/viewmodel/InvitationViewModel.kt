@@ -3,26 +3,27 @@ package com.thavin.email_invitations.presentation.viewmodel
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.thavin.email_invitations.data.InvitationRepository
-import com.thavin.email_invitations.data.model.Result
-import com.thavin.email_invitations.data.model.UserInfo
+import com.thavin.email_invitations.data.local.repository.InviteStatusRepository
+import com.thavin.email_invitations.data.remote.repository.RequestInviteRepository
+import com.thavin.email_invitations.data.remote.model.Result
+import com.thavin.email_invitations.data.remote.model.UserInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class InvitationViewModel @Inject constructor(
-    private val invitationRepository: InvitationRepository
+    private val requestInviteRepository: RequestInviteRepository,
+    private val inviteStatusRepository: InviteStatusRepository
 ) : ViewModel() {
 
     private var isNameValid = false
     private var isEmailValid = false
     private var isConfirmEmailValid = false
     private lateinit var currentEmail: String
-
-    private var isInvited = false
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -55,7 +56,7 @@ class InvitationViewModel @Inject constructor(
 
         object CancelInviteOnClick : UiEvent()
 
-        object CancelInviteLoading: UiEvent()
+        object CancelInviteLoading : UiEvent()
 
         object CancelInviteSuccess : UiEvent()
 
@@ -75,11 +76,11 @@ class InvitationViewModel @Inject constructor(
         if (isNameValid && isEmailValid && isConfirmEmailValid) {
             sendUiEvent(UiEvent.InviteDetailsLoading)
             viewModelScope.launch {
-                when (val result = invitationRepository.sendInvitation(
+                when (val result = requestInviteRepository.requestInvite(
                     UserInfo(name = name, email = email)
                 )) {
                     is Result.Success -> {
-                        isInvited = true
+                        inviteStatusRepository.setInviteStatus(true)
                         sendUiEvent(UiEvent.InviteDetailsSuccess)
                     }
                     is Result.Error -> sendUiEvent(UiEvent.InviteDetailsError(result.message))
@@ -124,19 +125,23 @@ class InvitationViewModel @Inject constructor(
         sendUiEvent(UiEvent.DismissInviteDetailsDialogOnClick)
     }
 
-    fun checkInviteStatus() {
-        if (isInvited) {
-            sendUiEvent(UiEvent.ShowPostInviteScreen)
-        } else {
-            sendUiEvent(UiEvent.ShowPreInviteScreen)
+    fun checkInviteStatus() =
+        viewModelScope.launch {
+            inviteStatusRepository.getInviteStatus().collect { isInvited ->
+                if (isInvited) {
+                    sendUiEvent(UiEvent.ShowPostInviteScreen)
+                } else {
+                    sendUiEvent(UiEvent.ShowPreInviteScreen)
+                }
+            }
         }
-    }
 
-    fun cancelInvite() {
-        sendUiEvent(UiEvent.CancelInviteLoading)
-        isInvited = false
-        sendUiEvent(UiEvent.CancelInviteSuccess)
-    }
+    fun cancelInvite() =
+        viewModelScope.launch {
+            sendUiEvent(UiEvent.CancelInviteLoading)
+            inviteStatusRepository.setInviteStatus(false)
+            sendUiEvent(UiEvent.CancelInviteSuccess)
+        }
 
     fun dismissCancelInviteDialogOnClick() {
         sendUiEvent(UiEvent.DismissCancelInviteDialogOnClick)

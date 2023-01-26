@@ -7,7 +7,7 @@
     <string name="broccoli_co_title">Broccoli &amp; Co.</string>
     <string name="broccoli_co_description">Please tap the button below to request an invitation to our service</string>
 
-    <string name="broccoli_co_invited_description">You have currently registered to our service. Tap the button below to cancel</string>
+    <string name="broccoli_co_invited_description">You are currently registered to our service. Tap the button below to cancel</string>
 
     <string name="name_hint">Name</string>
     <string name="email_hint">Email Address</string>
