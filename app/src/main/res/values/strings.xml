@@ -26,7 +26,7 @@
     <string name="cancel_invite_title">Confirm invitation cancellation</string>
     <string name="cancel_invite_description">Are you sure you want to cancel? You can request another invitation from the home page</string>
 
-    <string name="image_accessibility_description">Congratulations Image</string>
+    <string name="image_accessibility_description">Success Image</string>
     <string name="success_title">Congratulations you are now invited!</string>
     <string name="cancel_title">Invitation successfully cancelled</string>
     <string name="button_success">Done</string>

@@ -41,19 +41,25 @@ class InvitationViewModel @Inject constructor(
 
         object ValidConfirmEmail : UiEvent()
 
-        object SendUserDetailsLoading : UiEvent()
+        object InviteDetailsLoading : UiEvent()
 
-        object SendUserDetailsSuccess : UiEvent()
+        object InviteDetailsSuccess : UiEvent()
 
-        data class SendUserDetailsError(val message: String?) : UiEvent()
+        data class InviteDetailsError(val message: String?) : UiEvent()
 
-        object DismissDialogOnClick : UiEvent()
+        object DismissInviteDetailsDialogOnClick : UiEvent()
 
         object ShowPostInviteScreen : UiEvent()
 
         object ShowPreInviteScreen : UiEvent()
 
         object CancelInviteOnClick : UiEvent()
+
+        object CancelInviteLoading: UiEvent()
+
+        object CancelInviteSuccess : UiEvent()
+
+        object DismissCancelInviteDialogOnClick : UiEvent()
     }
 
     // Public Functions
@@ -67,16 +73,16 @@ class InvitationViewModel @Inject constructor(
 
     fun sendUserDetailsOnClick(name: String, email: String) {
         if (isNameValid && isEmailValid && isConfirmEmailValid) {
-            sendUiEvent(UiEvent.SendUserDetailsLoading)
+            sendUiEvent(UiEvent.InviteDetailsLoading)
             viewModelScope.launch {
                 when (val result = invitationRepository.sendInvitation(
                     UserInfo(name = name, email = email)
                 )) {
                     is Result.Success -> {
                         isInvited = true
-                        sendUiEvent(UiEvent.SendUserDetailsSuccess)
+                        sendUiEvent(UiEvent.InviteDetailsSuccess)
                     }
-                    is Result.Error -> sendUiEvent(UiEvent.SendUserDetailsError(result.message))
+                    is Result.Error -> sendUiEvent(UiEvent.InviteDetailsError(result.message))
                 }
             }
         }
@@ -114,8 +120,8 @@ class InvitationViewModel @Inject constructor(
         }
     }
 
-    fun dismissDialogOnClick() {
-        sendUiEvent(UiEvent.DismissDialogOnClick)
+    fun dismissInviteDetailsDialogOnClick() {
+        sendUiEvent(UiEvent.DismissInviteDetailsDialogOnClick)
     }
 
     fun checkInviteStatus() {
@@ -124,6 +130,16 @@ class InvitationViewModel @Inject constructor(
         } else {
             sendUiEvent(UiEvent.ShowPreInviteScreen)
         }
+    }
+
+    fun cancelInvite() {
+        sendUiEvent(UiEvent.CancelInviteLoading)
+        isInvited = false
+        sendUiEvent(UiEvent.CancelInviteSuccess)
+    }
+
+    fun dismissCancelInviteDialogOnClick() {
+        sendUiEvent(UiEvent.DismissCancelInviteDialogOnClick)
     }
 
     // Private Functions
