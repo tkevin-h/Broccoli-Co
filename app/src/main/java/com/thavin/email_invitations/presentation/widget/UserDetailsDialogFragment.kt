@@ -1,4 +1,4 @@
-package com.thavin.email_invitations.presentation.view
+package com.thavin.email_invitations.presentation.widget
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -89,6 +89,23 @@ class UserDetailsDialogFragment(
     fun showSuccess() {
         binding.findViewById<CardView>(R.id.cardview_user_details).visibility = GONE
         binding.findViewById<CardView>(R.id.cardview_success).visibility = VISIBLE
+    }
+
+    fun showError(error: String? = null) {
+        val errorTextView = binding.findViewById<TextView>(R.id.textview_send_error)
+
+        error?.let {
+            errorTextView.text = error
+        } ?: run {
+            errorTextView.text = getString(R.string.send_details_generic_error)
+        }
+
+        errorTextView.visibility = VISIBLE
+        showSendButton()
+    }
+
+    fun hideError() {
+        binding.findViewById<TextView>(R.id.textview_send_error).visibility = View.INVISIBLE
     }
 
     private fun setSuccessImage() {

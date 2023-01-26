@@ -28,19 +28,22 @@ class EmailInvitationViewModel @Inject constructor(
     sealed class UiEvent {
         object RequestInviteOnClick : UiEvent()
 
-        data class SendUserDetailsOnClick(val name: String, val email: String) : UiEvent()
-
-        object Loading : UiEvent()
-
-        object Complete : UiEvent()
-
         object InvalidName : UiEvent()
         object ValidName : UiEvent()
-        data class ValidateName(val name: String) : UiEvent()
 
-        data class ValidateEmail(val email: String) : UiEvent()
+        object InvalidEmail : UiEvent()
 
-        data class ValidateConfirmEmail(val confirmEmail: String) : UiEvent()
+        object ValidEmail : UiEvent()
+
+        object InvalidConfirmEmail : UiEvent()
+
+        object ValidConfirmEmail : UiEvent()
+
+        object SendUserDetailsLoading : UiEvent()
+
+        object SendUserDetailsComplete : UiEvent()
+
+        data class SendUserDetailsError(val message: String?) : UiEvent()
 
         object DismissDialogOnClick : UiEvent()
 
@@ -52,17 +55,17 @@ class EmailInvitationViewModel @Inject constructor(
             _uiEvent.send(event)
         }
 
-    fun requestInvitationOnClick() {
+    fun requestInviteOnClick() {
         sendUiEvent(UiEvent.RequestInviteOnClick)
     }
 
-    fun cancelInvitationOnClick() {
+    fun cancelInviteOnClick() {
         sendUiEvent(UiEvent.CancelInviteOnClick)
     }
 
     fun sendUserDetailsOnClick(name: String, email: String) {
         if (isNameValid && isEmailValid && isConfirmEmailValid) {
-            sendUiEvent(UiEvent.Loading)
+            sendUiEvent(UiEvent.SendUserDetailsLoading)
             viewModelScope.launch {
                 when (val result = emailInvitationRepository.sendInvitation(
                     UserInfo(
@@ -70,8 +73,8 @@ class EmailInvitationViewModel @Inject constructor(
                         email = email
                     )
                 )) {
-                    is Result.Success -> sendUiEvent(UiEvent.Complete)
-                    is Result.Error -> println(result.exception)
+                    is Result.Success -> sendUiEvent(UiEvent.SendUserDetailsComplete)
+                    is Result.Error -> sendUiEvent(UiEvent.SendUserDetailsError(result.message))
                 }
             }
         }
@@ -87,26 +90,26 @@ class EmailInvitationViewModel @Inject constructor(
         }
     }
 
-    fun validateEmail(email: String): Boolean {
+    fun validateEmail(email: String) {
         currentEmail = email
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             isEmailValid = false
-            return false
+            sendUiEvent(UiEvent.InvalidEmail)
+        } else {
+            isEmailValid = true
+            sendUiEvent(UiEvent.ValidEmail)
         }
-
-        isEmailValid = true
-        return true
     }
 
-    fun validateConfirmEmail(email: String): Boolean {
+    fun validateConfirmEmail(email: String) {
         if (email != currentEmail) {
             isConfirmEmailValid = false
-            return false
+            sendUiEvent(UiEvent.InvalidConfirmEmail)
+        } else {
+            isConfirmEmailValid = true
+            sendUiEvent(UiEvent.ValidConfirmEmail)
         }
-
-        isConfirmEmailValid = true
-        return true
     }
 
     fun dismissDialogOnClick() {

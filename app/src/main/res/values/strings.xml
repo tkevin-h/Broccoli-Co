@@ -15,6 +15,7 @@
     <string name="name_validation_hint">Name must be more than 3 characters</string>
     <string name="email_validation_hint">Must be a valid email address</string>
     <string name="confirm_email_validation_hint">Email address is not matching</string>
+    <string name="send_details_generic_error">There was an error please try again</string>
 
     <string name="button_request_invite">Request Invite</string>
     <string name="button_cancel_invite">Cancel Invite</string>

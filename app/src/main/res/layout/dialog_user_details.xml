@@ -79,8 +79,21 @@
                 android:text="@string/confirm_email_validation_hint"
                 android:textColor="@color/red"
                 android:visibility="invisible"
+                app:layout_constraintBottom_toTopOf="@id/textview_send_error"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/textview_send_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="@string/send_details_generic_error"
+                android:textColor="@color/red"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toTopOf="@id/button_request_invite"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 tools:visibility="visible" />
 
             <Button

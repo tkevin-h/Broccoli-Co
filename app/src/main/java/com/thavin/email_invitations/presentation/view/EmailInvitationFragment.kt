@@ -12,6 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.thavin.email_invitations.databinding.FragmentEmailInvitationBinding
 import com.thavin.email_invitations.presentation.viewmodel.EmailInvitationViewModel
+import com.thavin.email_invitations.presentation.viewmodel.EmailInvitationViewModel.UiEvent.*
+import com.thavin.email_invitations.presentation.widget.UserDetailsDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -37,7 +39,7 @@ class EmailInvitationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupBinding()
-        setupUserDetailsDialog()
+        setupUserDetailsDialogFragment()
         collectUiEvents()
     }
 
@@ -51,23 +53,18 @@ class EmailInvitationFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiEvent.collect {
                     when (it) {
-                        is EmailInvitationViewModel.UiEvent.RequestInviteOnClick -> showUserDetailsDialogFragment()
-                        is EmailInvitationViewModel.UiEvent.SendUserDetailsOnClick -> viewModel.sendUserDetailsOnClick(
-                            it.name,
-                            it.email
-                        )
-                        is EmailInvitationViewModel.UiEvent.InvalidName -> userDetailsDialogFragment?.setValidateNameHintVisibility(VISIBLE)
-                        is EmailInvitationViewModel.UiEvent.ValidName -> userDetailsDialogFragment?.setValidateNameHintVisibility(INVISIBLE)
-                        is EmailInvitationViewModel.UiEvent.ValidateEmail -> setValidateEmailVisibility(
-                            it.email
-                        )
-                        is EmailInvitationViewModel.UiEvent.ValidateConfirmEmail -> setValidateConfirmEmailVisibility(
-                            it.confirmEmail
-                        )
-                        is EmailInvitationViewModel.UiEvent.Loading -> userDetailsDialogFragment?.showLoadingProgressBar()
-                        is EmailInvitationViewModel.UiEvent.Complete -> userDetailsDialogFragment?.showSuccess()
-                        is EmailInvitationViewModel.UiEvent.DismissDialogOnClick -> userDetailsDialogFragment?.dismissDialog()
-                        else -> {}
+                        is RequestInviteOnClick -> showUserDetailsDialogFragment()
+                        is InvalidName -> userDetailsDialogFragment?.setValidateNameHintVisibility(VISIBLE)
+                        is ValidName -> userDetailsDialogFragment?.setValidateNameHintVisibility(INVISIBLE)
+                        is InvalidEmail -> userDetailsDialogFragment?.setValidateEmailHintVisibility(VISIBLE)
+                        is ValidEmail -> userDetailsDialogFragment?.setValidateEmailHintVisibility(INVISIBLE)
+                        is InvalidConfirmEmail -> userDetailsDialogFragment?.setValidateConfirmEmailHintVisibility(VISIBLE)
+                        is ValidConfirmEmail -> userDetailsDialogFragment?.setValidateConfirmEmailHintVisibility(INVISIBLE)
+                        is SendUserDetailsLoading -> userDetailsDialogFragment?.showLoadingProgressBar()
+                        is SendUserDetailsComplete -> userDetailsDialogFragment?.showSuccess()
+                        is SendUserDetailsError -> userDetailsDialogFragment?.showError(it.message)
+                        is DismissDialogOnClick -> userDetailsDialogFragment?.dismissDialog()
+                        is CancelInviteOnClick -> {}
                     }
                 }
             }
@@ -76,33 +73,15 @@ class EmailInvitationFragment : Fragment() {
     private fun setupBinding() =
         with(binding) {
             buttonRequestUserDetails.setOnClickListener {
-                viewModel.requestInvitationOnClick()
+                viewModel.requestInviteOnClick()
             }
 
             buttonCancelInvite.setOnClickListener {
-                viewModel.cancelInvitationOnClick()
+                viewModel.cancelInviteOnClick()
             }
         }
 
-    private fun setValidateEmailVisibility(email: String) =
-        userDetailsDialogFragment?.run {
-            if (viewModel.validateEmail(email)) {
-                setValidateEmailHintVisibility(INVISIBLE)
-            } else {
-                setValidateEmailHintVisibility(VISIBLE)
-            }
-        }
-
-    private fun setValidateConfirmEmailVisibility(confirmEmail: String) =
-        userDetailsDialogFragment?.run {
-            if (viewModel.validateConfirmEmail(confirmEmail)) {
-                setValidateConfirmEmailHintVisibility(INVISIBLE)
-            } else {
-                setValidateConfirmEmailHintVisibility(VISIBLE)
-            }
-        }
-
-    private fun setupUserDetailsDialog() {
+    private fun setupUserDetailsDialogFragment() {
         userDetailsDialogFragment = UserDetailsDialogFragment(
             sendUserDetails = { name, email -> viewModel.sendUserDetailsOnClick(name, email) },
             validateName = { name -> viewModel.validateName(name) },

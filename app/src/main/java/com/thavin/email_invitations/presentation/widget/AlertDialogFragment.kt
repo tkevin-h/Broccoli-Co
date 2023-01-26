@@ -1,4 +1,4 @@
-package com.thavin.email_invitations.presentation.view
+package com.thavin.email_invitations.presentation.widget
 
 import androidx.fragment.app.DialogFragment
 
