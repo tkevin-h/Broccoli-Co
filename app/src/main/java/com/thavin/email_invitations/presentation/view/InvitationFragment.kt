@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.thavin.email_invitations.databinding.FragmentEmailInvitationBinding
+import com.thavin.email_invitations.databinding.FragmentInvitationBinding
 import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel
 import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel.UiEvent.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +21,7 @@ class InvitationFragment : Fragment() {
 
     private val viewModel: InvitationViewModel by viewModels()
 
-    private var _binding: FragmentEmailInvitationBinding? = null
+    private var _binding: FragmentInvitationBinding? = null
     private val binding get() = _binding!!
 
     private var inviteDetailsDialog: InviteDetailsDialog? = null
@@ -31,7 +31,7 @@ class InvitationFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentEmailInvitationBinding.inflate(inflater, container, false)
+        _binding = FragmentInvitationBinding.inflate(inflater, container, false)
         return binding.root
     }
 
