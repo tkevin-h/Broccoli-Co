@@ -3,7 +3,7 @@ package com.thavin.email_invitations.presentation.viewmodel
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.thavin.email_invitations.data.EmailInvitationRepository
+import com.thavin.email_invitations.data.InvitationRepository
 import com.thavin.email_invitations.data.model.Result
 import com.thavin.email_invitations.data.model.UserInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,14 +13,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EmailInvitationViewModel @Inject constructor(
-    private val emailInvitationRepository: EmailInvitationRepository
+class InvitationViewModel @Inject constructor(
+    private val invitationRepository: InvitationRepository
 ) : ViewModel() {
 
     private var isNameValid = false
     private var isEmailValid = false
     private var isConfirmEmailValid = false
     private lateinit var currentEmail: String
+
+    private var isInvited = false
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -41,20 +43,20 @@ class EmailInvitationViewModel @Inject constructor(
 
         object SendUserDetailsLoading : UiEvent()
 
-        object SendUserDetailsComplete : UiEvent()
+        object SendUserDetailsSuccess : UiEvent()
 
         data class SendUserDetailsError(val message: String?) : UiEvent()
 
         object DismissDialogOnClick : UiEvent()
 
+        object ShowPostInviteScreen : UiEvent()
+
+        object ShowPreInviteScreen : UiEvent()
+
         object CancelInviteOnClick : UiEvent()
     }
 
-    private fun sendUiEvent(event: UiEvent) =
-        viewModelScope.launch {
-            _uiEvent.send(event)
-        }
-
+    // Public Functions
     fun requestInviteOnClick() {
         sendUiEvent(UiEvent.RequestInviteOnClick)
     }
@@ -67,13 +69,13 @@ class EmailInvitationViewModel @Inject constructor(
         if (isNameValid && isEmailValid && isConfirmEmailValid) {
             sendUiEvent(UiEvent.SendUserDetailsLoading)
             viewModelScope.launch {
-                when (val result = emailInvitationRepository.sendInvitation(
-                    UserInfo(
-                        name = name,
-                        email = email
-                    )
+                when (val result = invitationRepository.sendInvitation(
+                    UserInfo(name = name, email = email)
                 )) {
-                    is Result.Success -> sendUiEvent(UiEvent.SendUserDetailsComplete)
+                    is Result.Success -> {
+                        isInvited = true
+                        sendUiEvent(UiEvent.SendUserDetailsSuccess)
+                    }
                     is Result.Error -> sendUiEvent(UiEvent.SendUserDetailsError(result.message))
                 }
             }
@@ -115,4 +117,18 @@ class EmailInvitationViewModel @Inject constructor(
     fun dismissDialogOnClick() {
         sendUiEvent(UiEvent.DismissDialogOnClick)
     }
+
+    fun checkInviteStatus() {
+        if (isInvited) {
+            sendUiEvent(UiEvent.ShowPostInviteScreen)
+        } else {
+            sendUiEvent(UiEvent.ShowPreInviteScreen)
+        }
+    }
+
+    // Private Functions
+    private fun sendUiEvent(event: UiEvent) =
+        viewModelScope.launch {
+            _uiEvent.send(event)
+        }
 }

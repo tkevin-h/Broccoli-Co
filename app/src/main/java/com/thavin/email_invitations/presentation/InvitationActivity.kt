@@ -10,19 +10,19 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.snackbar.Snackbar
 import com.thavin.email_invitations.R
-import com.thavin.email_invitations.databinding.ActivityEmailInvitationBinding
+import com.thavin.email_invitations.databinding.ActivityInvitationBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class EmailInvitationActivity : AppCompatActivity() {
+class InvitationActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityEmailInvitationBinding
+    private lateinit var binding: ActivityInvitationBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityEmailInvitationBinding.inflate(layoutInflater)
+        binding = ActivityInvitationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)

@@ -2,6 +2,7 @@ package com.thavin.email_invitations.presentation.widget
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.view.View.GONE
@@ -16,12 +17,13 @@ import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.thavin.email_invitations.R
 
-class UserDetailsDialogFragment(
+class InviteDetailsDialogFragment(
     private val sendUserDetails: (name: String, email: String) -> Unit,
     private val validateName: (name: String) -> Unit,
     private val validateEmail: (name: String) -> Unit,
     private val validateConfirmEmail: (name: String) -> Unit,
-    private val done: () -> Unit
+    private val done: () -> Unit,
+    private val checkInviteStatus: () -> Unit
 ) : DialogFragment() {
 
     private lateinit var binding: View
@@ -31,7 +33,7 @@ class UserDetailsDialogFragment(
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = requireActivity().layoutInflater.inflate(R.layout.dialog_user_details, null)
+        binding = requireActivity().layoutInflater.inflate(R.layout.dialog_fragment_invite_details, null)
 
         setSuccessImage()
 
@@ -55,8 +57,15 @@ class UserDetailsDialogFragment(
             .create()
     }
 
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        checkInviteStatus()
+    }
+
+    // Public Functions
     fun dismissDialog() {
         dismiss()
+        checkInviteStatus()
     }
 
     fun setValidateNameHintVisibility(visibility: Int) {
@@ -72,21 +81,12 @@ class UserDetailsDialogFragment(
     }
 
     fun showLoadingProgressBar() {
+        hideError()
         binding.findViewById<Button>(R.id.button_request_invite).visibility = View.INVISIBLE
         binding.findViewById<ProgressBar>(R.id.progress_request_invite).visibility = VISIBLE
     }
 
-    fun showSendButton() {
-        binding.findViewById<ProgressBar>(R.id.progress_request_invite).visibility = View.INVISIBLE
-        binding.findViewById<Button>(R.id.button_request_invite).visibility = VISIBLE
-    }
-
-    fun showUserDetails() {
-        binding.findViewById<CardView>(R.id.cardview_success).visibility = GONE
-        binding.findViewById<CardView>(R.id.cardview_user_details).visibility = VISIBLE
-    }
-
-    fun showSuccess() {
+    fun showSuccessDialog() {
         binding.findViewById<CardView>(R.id.cardview_user_details).visibility = GONE
         binding.findViewById<CardView>(R.id.cardview_success).visibility = VISIBLE
     }
@@ -104,8 +104,14 @@ class UserDetailsDialogFragment(
         showSendButton()
     }
 
-    fun hideError() {
+    // Private Functions
+    private fun hideError() {
         binding.findViewById<TextView>(R.id.textview_send_error).visibility = View.INVISIBLE
+    }
+
+    private fun showSendButton() {
+        binding.findViewById<ProgressBar>(R.id.progress_request_invite).visibility = View.INVISIBLE
+        binding.findViewById<Button>(R.id.button_request_invite).visibility = VISIBLE
     }
 
     private fun setSuccessImage() {

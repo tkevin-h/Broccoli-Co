@@ -1,9 +1,9 @@
 package com.thavin.email_invitations.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.thavin.email_invitations.data.EmailInvitationApi
-import com.thavin.email_invitations.data.EmailInvitationRepository
-import com.thavin.email_invitations.data.EmailInvitationRepositoryImpl
+import com.thavin.email_invitations.data.InvitationApi
+import com.thavin.email_invitations.data.InvitationRepository
+import com.thavin.email_invitations.data.InvitationRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,37 +19,26 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object EmailInvitationModule {
-
-//    @Provides
-//    @Singleton
-//    fun provideEmailInvitationApi(client: OkHttpClient): EmailInvitationApi {
-//        return Retrofit.Builder()
-//            .baseUrl(EmailInvitationApi.BASE_URL)
-//            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
-//            .client(client)
-//            .build()
-//            .create(EmailInvitationApi::class.java)
-//    }
-
+object InvitationModule {
+    
     @OptIn(ExperimentalSerializationApi::class)
     @Provides
     @Singleton
-    fun providesEmailInvitationApi(json: Json, client: OkHttpClient): EmailInvitationApi {
+    fun providesInvitationApi(json: Json, client: OkHttpClient): InvitationApi {
         return Retrofit.Builder()
-            .baseUrl(EmailInvitationApi.BASE_URL)
+            .baseUrl(InvitationApi.BASE_URL)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .client(client)
             .build()
-            .create(EmailInvitationApi::class.java)
+            .create(InvitationApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun providesEmailInvitationRepository(
-        emailInvitationApi: EmailInvitationApi
-    ): EmailInvitationRepository {
-        return EmailInvitationRepositoryImpl(emailInvitationApi)
+    fun providesInvitationRepository(
+        invitationApi: InvitationApi
+    ): InvitationRepository {
+        return InvitationRepositoryImpl(invitationApi)
     }
 
     @Provides

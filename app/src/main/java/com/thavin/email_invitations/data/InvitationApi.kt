@@ -6,7 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
-interface EmailInvitationApi {
+interface InvitationApi {
 
     companion object {
         const val BASE_URL = "https://us-central1-blinkapp-684c1.cloudfunctions.net/"

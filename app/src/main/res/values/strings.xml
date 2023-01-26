@@ -7,7 +7,7 @@
     <string name="broccoli_co_title">Broccoli &amp; Co.</string>
     <string name="broccoli_co_description">Please tap the button below to request an invitation to our service</string>
 
-    <string name="broccoli_co_invited_description">You have already registered to our service tap the button bellow to cancel</string>
+    <string name="broccoli_co_invited_description">You have currently registered to our service. Tap the button below to cancel</string>
 
     <string name="name_hint">Name</string>
     <string name="email_hint">Email Address</string>
@@ -21,9 +21,14 @@
     <string name="button_cancel_invite">Cancel Invite</string>
 
     <string name="button_send_user_details">Send</string>
+    <string name="button_confirm_cancel">Yes cancel my invitation</string>
+    <string name="button_cancel">No keep my invitation</string>
+    <string name="cancel_invite_title">Confirm invitation cancellation</string>
+    <string name="cancel_invite_description">Are you sure you want to cancel? You can request another invitation from the home page</string>
 
     <string name="image_accessibility_description">Congratulations Image</string>
     <string name="success_title">Congratulations you are now invited!</string>
+    <string name="cancel_title">Invitation successfully cancelled</string>
     <string name="button_success">Done</string>
 
 </resources>

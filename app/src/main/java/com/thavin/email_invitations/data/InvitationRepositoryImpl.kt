@@ -8,14 +8,14 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class EmailInvitationRepositoryImpl(
-    private val emailInvitationApi: EmailInvitationApi
-) : EmailInvitationRepository {
+class InvitationRepositoryImpl(
+    private val invitationApi: InvitationApi
+) : InvitationRepository {
 
     override suspend fun sendInvitation(userInfo: UserInfo): Result =
         withContext(Dispatchers.IO) {
             try {
-                val result = emailInvitationApi.postUserInfo(userInfo)
+                val result = invitationApi.postUserInfo(userInfo)
                 result.errorBody()?.let {
                     val errorMessage = getErrorMessage(it.string())
                     Result.Error(message = errorMessage)
