@@ -1,4 +1,4 @@
-# Broccoli-Co.
+# Request Invite
 An app for requesting an invitation to the Broccoli &amp; Co. closed beta service
 
 # Features
