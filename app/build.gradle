@@ -67,6 +67,9 @@ dependencies {
     // DataStore
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
 
+    // Splash Screen Compatibility
+    implementation 'androidx.core:core-splashscreen:1.0.0'
+
     // Unit Test
     testImplementation 'app.cash.turbine:turbine:0.7.0'
     testImplementation 'com.google.truth:truth:1.1.3'
