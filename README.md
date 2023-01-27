@@ -24,4 +24,4 @@ An app for requesting an invitation to the Broccoli &amp; Co. closed beta servic
 
 # Screens
 - `Pre Invite`:
-  <img src="readme/pre_invite.png" width="500">
+  - <img src="readme/pre_invite.png" width="300">
