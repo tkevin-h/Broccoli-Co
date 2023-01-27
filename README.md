@@ -21,3 +21,7 @@ An app for requesting an invitation to the Broccoli &amp; Co. closed beta servic
 - `Presentation`: MVVM architecture
   - `view`: Fragment for the pre and post invite screens. Dialogs for the modal forms to request or cancel an invite.
   - `viewmodel`: View Model to orchestrate UI events and validate input fields.
+
+# Screens
+- `Pre Invite`:
+  <img src="readme/pre_invite.png">
