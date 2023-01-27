@@ -6,11 +6,11 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import com.thavin.email_invitations.data.local.repository.InviteStatusRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class InviteStatusRepositoryImpl(
+class InviteStatusUseCase(
     private val dataStore: DataStore<Preferences>
 ) : InviteStatusRepository {
 
@@ -24,12 +24,15 @@ class InviteStatusRepositoryImpl(
         }
     }
 
-    override suspend fun getInviteStatus(): Flow<Boolean> =
-        dataStore.data
+    override suspend fun getInviteStatus(): Boolean {
+        val status = dataStore.data
             .catch {
                 emit(emptyPreferences())
             }
             .map { preferences ->
                 preferences[dataStoreKey] ?: false
             }
+
+        return status.first()
+    }
 }

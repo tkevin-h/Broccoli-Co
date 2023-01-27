@@ -63,12 +63,6 @@ class CancelInviteDialog(
         checkInviteStatus()
     }
 
-    fun showLoading() {
-        binding.findViewById<Button>(R.id.button_confirm_cancel).visibility = View.INVISIBLE
-        binding.findViewById<Button>(R.id.button_cancel).visibility = View.INVISIBLE
-        binding.findViewById<ProgressBar>(R.id.progress_cancel_invite).visibility = VISIBLE
-    }
-
     fun showSuccess() {
         binding.findViewById<CardView>(R.id.cardview_cancel_invite).visibility = GONE
         binding.findViewById<CardView>(R.id.cardview_cancel_success).visibility = VISIBLE

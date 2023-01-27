@@ -1,6 +1,6 @@
 package com.thavin.email_invitations.presentation.viewmodel
 
-import android.util.Patterns
+import androidx.core.util.PatternsCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thavin.email_invitations.data.local.repository.InviteStatusRepository
@@ -9,7 +9,6 @@ import com.thavin.email_invitations.data.remote.model.Result
 import com.thavin.email_invitations.data.remote.model.UserInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -56,8 +55,6 @@ class InvitationViewModel @Inject constructor(
 
         object CancelInviteOnClick : UiEvent()
 
-        object CancelInviteLoading : UiEvent()
-
         object CancelInviteSuccess : UiEvent()
 
         object DismissCancelInviteDialogOnClick : UiEvent()
@@ -68,7 +65,7 @@ class InvitationViewModel @Inject constructor(
         sendUiEvent(UiEvent.RequestInviteOnClick)
     }
 
-    fun cancelInviteOnClick() {
+    fun requestCancelInviteOnClick() {
         sendUiEvent(UiEvent.CancelInviteOnClick)
     }
 
@@ -102,7 +99,7 @@ class InvitationViewModel @Inject constructor(
     fun validateEmail(email: String) {
         currentEmail = email
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()) {
             isEmailValid = false
             sendUiEvent(UiEvent.InvalidEmail)
         } else {
@@ -127,18 +124,15 @@ class InvitationViewModel @Inject constructor(
 
     fun checkInviteStatus() =
         viewModelScope.launch {
-            inviteStatusRepository.getInviteStatus().collect { isInvited ->
-                if (isInvited) {
-                    sendUiEvent(UiEvent.ShowPostInviteScreen)
-                } else {
-                    sendUiEvent(UiEvent.ShowPreInviteScreen)
-                }
+            if (inviteStatusRepository.getInviteStatus()) {
+                sendUiEvent(UiEvent.ShowPostInviteScreen)
+            } else {
+                sendUiEvent(UiEvent.ShowPreInviteScreen)
             }
         }
 
-    fun cancelInvite() =
+    fun cancelInviteOnClick() =
         viewModelScope.launch {
-            sendUiEvent(UiEvent.CancelInviteLoading)
             inviteStatusRepository.setInviteStatus(false)
             sendUiEvent(UiEvent.CancelInviteSuccess)
         }

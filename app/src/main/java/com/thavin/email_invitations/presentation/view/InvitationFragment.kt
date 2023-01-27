@@ -71,7 +71,6 @@ class InvitationFragment : Fragment() {
                             is ShowPostInviteScreen -> showPostInviteScreen()
                             is ShowPreInviteScreen -> showPreInviteScreen()
                             is CancelInviteOnClick -> showCancelInviteDialog()
-                            is CancelInviteLoading -> cancelInviteDialog?.showLoading()
                             is CancelInviteSuccess -> cancelInviteDialog?.showSuccess()
                             is DismissCancelInviteDialogOnClick -> cancelInviteDialog?.dismissDialog()
                         }
@@ -86,7 +85,7 @@ class InvitationFragment : Fragment() {
             }
 
             buttonCancelInvite.setOnClickListener {
-                viewModel.cancelInviteOnClick()
+                viewModel.requestCancelInviteOnClick()
             }
         }
 
@@ -103,7 +102,7 @@ class InvitationFragment : Fragment() {
 
     private fun setupCancelInviteDialog() {
         cancelInviteDialog = CancelInviteDialog(
-            cancelInvite = { viewModel.cancelInvite() },
+            cancelInvite = { viewModel.cancelInviteOnClick() },
             done = { viewModel.dismissCancelInviteDialogOnClick() },
             checkInviteStatus = { viewModel.checkInviteStatus() }
         )
