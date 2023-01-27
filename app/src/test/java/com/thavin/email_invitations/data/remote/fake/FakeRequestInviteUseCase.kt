@@ -1,4 +1,4 @@
-package com.thavin.email_invitations.data.remote
+package com.thavin.email_invitations.data.remote.fake
 
 import com.thavin.email_invitations.data.remote.model.Result
 import com.thavin.email_invitations.data.remote.model.UserInfo

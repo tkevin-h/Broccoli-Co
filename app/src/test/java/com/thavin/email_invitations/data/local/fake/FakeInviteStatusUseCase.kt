@@ -1,4 +1,4 @@
-package com.thavin.email_invitations.data.local
+package com.thavin.email_invitations.data.local.fake
 
 import com.thavin.email_invitations.data.local.repository.InviteStatusRepository
 

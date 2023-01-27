@@ -2,8 +2,8 @@ package com.thavin.email_invitations.presentation.viewmodel
 
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
-import com.thavin.email_invitations.data.local.FakeInviteStatusUseCase
-import com.thavin.email_invitations.data.remote.FakeRequestInviteUseCase
+import com.thavin.email_invitations.data.local.fake.FakeInviteStatusUseCase
+import com.thavin.email_invitations.data.remote.fake.FakeRequestInviteUseCase
 import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel.UiEvent.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -15,7 +15,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@ExperimentalCoroutinesApi
 class InvitationViewModelTest {
 
     private lateinit var viewModel: InvitationViewModel
