@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Invitation</string>
+    <string name="app_name">Broccoli &amp; Co.</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="email_invitation_fragment_label">Email Invitation</string>
