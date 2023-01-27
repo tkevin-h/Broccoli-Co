@@ -9,7 +9,7 @@
 
     <string name="broccoli_co_invited_description">You are currently registered to our service. Tap the button below to cancel</string>
 
-    <string name="name_hint">Name</string>
+    <string name="name_hint">Full Name</string>
     <string name="email_hint">Email Address</string>
     <string name="confirm_email_hint">Confirm Email Address</string>
     <string name="name_validation_hint">Name must be more than 3 characters</string>

@@ -19,11 +19,6 @@ class InvitationViewModel @Inject constructor(
     private val inviteStatusRepository: InviteStatusRepository
 ) : ViewModel() {
 
-    private var isNameValid = false
-    private var isEmailValid = false
-    private var isConfirmEmailValid = false
-    private lateinit var currentEmail: String
-
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
@@ -69,8 +64,8 @@ class InvitationViewModel @Inject constructor(
         sendUiEvent(UiEvent.CancelInviteOnClick)
     }
 
-    fun sendUserDetailsOnClick(name: String, email: String) {
-        if (isNameValid && isEmailValid && isConfirmEmailValid) {
+    fun sendUserDetailsOnClick(name: String, email: String, confirmEmail: String) {
+        if (validateFields(name, email, confirmEmail)) {
             sendUiEvent(UiEvent.InviteDetailsLoading)
             viewModelScope.launch {
                 when (val result = requestInviteRepository.requestInvite(
@@ -83,38 +78,6 @@ class InvitationViewModel @Inject constructor(
                     is Result.Error -> sendUiEvent(UiEvent.InviteDetailsError(result.message))
                 }
             }
-        }
-    }
-
-    fun validateName(name: String) {
-        if (name.length <= 3) {
-            isNameValid = false
-            sendUiEvent(UiEvent.InvalidName)
-        } else {
-            isNameValid = true
-            sendUiEvent(UiEvent.ValidName)
-        }
-    }
-
-    fun validateEmail(email: String) {
-        currentEmail = email
-
-        if (!PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()) {
-            isEmailValid = false
-            sendUiEvent(UiEvent.InvalidEmail)
-        } else {
-            isEmailValid = true
-            sendUiEvent(UiEvent.ValidEmail)
-        }
-    }
-
-    fun validateConfirmEmail(email: String) {
-        if (email != currentEmail) {
-            isConfirmEmailValid = false
-            sendUiEvent(UiEvent.InvalidConfirmEmail)
-        } else {
-            isConfirmEmailValid = true
-            sendUiEvent(UiEvent.ValidConfirmEmail)
         }
     }
 
@@ -146,4 +109,41 @@ class InvitationViewModel @Inject constructor(
         viewModelScope.launch {
             _uiEvent.send(event)
         }
+
+    private fun validateFields(name: String, email: String, confirmEmail: String): Boolean {
+        val isNameValid = validateName(name)
+        val isEmailValid = validateEmail(email)
+        val isConfirmEmailValid = validateConfirmEmail(confirmEmail, email)
+
+        if (isNameValid) {
+            sendUiEvent(UiEvent.ValidName)
+        } else {
+            sendUiEvent(UiEvent.InvalidName)
+        }
+
+        if (isEmailValid) {
+            sendUiEvent(UiEvent.ValidEmail)
+        } else {
+            sendUiEvent(UiEvent.InvalidEmail)
+        }
+
+        if (isConfirmEmailValid) {
+            sendUiEvent(UiEvent.ValidConfirmEmail)
+        } else {
+            sendUiEvent(UiEvent.InvalidConfirmEmail)
+        }
+
+        return isNameValid && isEmailValid && isConfirmEmailValid
+    }
+
+    private fun validateName(name: String): Boolean =
+        name.length > 3
+
+
+    private fun validateEmail(email: String): Boolean =
+        PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()
+
+
+    private fun validateConfirmEmail(confirmEmail: String, currentEmail: String): Boolean =
+        confirmEmail == currentEmail
 }

@@ -56,24 +56,32 @@ class InvitationFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiEvent.collect {
-                        when (it) {
-                            is RequestInviteOnClick -> showInviteDetailsDialog()
-                            is InvalidName -> inviteDetailsDialog?.setValidateNameHintVisibility(VISIBLE)
-                            is ValidName -> inviteDetailsDialog?.setValidateNameHintVisibility(INVISIBLE)
-                            is InvalidEmail -> inviteDetailsDialog?.setValidateEmailHintVisibility(VISIBLE)
-                            is ValidEmail -> inviteDetailsDialog?.setValidateEmailHintVisibility(INVISIBLE)
-                            is InvalidConfirmEmail -> inviteDetailsDialog?.setValidateConfirmEmailHintVisibility(VISIBLE)
-                            is ValidConfirmEmail -> inviteDetailsDialog?.setValidateConfirmEmailHintVisibility(INVISIBLE)
-                            is InviteDetailsLoading -> inviteDetailsDialog?.showLoading()
-                            is InviteDetailsSuccess -> inviteDetailsDialog?.showSuccessDialog()
-                            is InviteDetailsError -> inviteDetailsDialog?.showError(it.message)
-                            is DismissInviteDetailsDialogOnClick -> inviteDetailsDialog?.dismissDialog()
-                            is ShowPostInviteScreen -> showPostInviteScreen()
-                            is ShowPreInviteScreen -> showPreInviteScreen()
-                            is CancelInviteOnClick -> showCancelInviteDialog()
-                            is CancelInviteSuccess -> cancelInviteDialog?.showSuccess()
-                            is DismissCancelInviteDialogOnClick -> cancelInviteDialog?.dismissDialog()
-                        }
+                    when (it) {
+                        is RequestInviteOnClick -> showInviteDetailsDialog()
+                        is InvalidName -> inviteDetailsDialog?.setValidateNameHintVisibility(VISIBLE)
+                        is ValidName -> inviteDetailsDialog?.setValidateNameHintVisibility(INVISIBLE)
+                        is InvalidEmail -> inviteDetailsDialog?.setValidateEmailHintVisibility(
+                            VISIBLE
+                        )
+                        is ValidEmail -> inviteDetailsDialog?.setValidateEmailHintVisibility(
+                            INVISIBLE
+                        )
+                        is InvalidConfirmEmail -> inviteDetailsDialog?.setValidateConfirmEmailHintVisibility(
+                            VISIBLE
+                        )
+                        is ValidConfirmEmail -> inviteDetailsDialog?.setValidateConfirmEmailHintVisibility(
+                            INVISIBLE
+                        )
+                        is InviteDetailsLoading -> inviteDetailsDialog?.showLoading()
+                        is InviteDetailsSuccess -> inviteDetailsDialog?.showSuccessDialog()
+                        is InviteDetailsError -> inviteDetailsDialog?.showError(it.message)
+                        is DismissInviteDetailsDialogOnClick -> inviteDetailsDialog?.dismissDialog()
+                        is ShowPostInviteScreen -> showPostInviteScreen()
+                        is ShowPreInviteScreen -> showPreInviteScreen()
+                        is CancelInviteOnClick -> showCancelInviteDialog()
+                        is CancelInviteSuccess -> cancelInviteDialog?.showSuccess()
+                        is DismissCancelInviteDialogOnClick -> cancelInviteDialog?.dismissDialog()
+                    }
                 }
             }
         }
@@ -91,10 +99,13 @@ class InvitationFragment : Fragment() {
 
     private fun setupInviteDetailsDialog() {
         inviteDetailsDialog = InviteDetailsDialog(
-            sendUserDetails = { name, email -> viewModel.sendUserDetailsOnClick(name, email) },
-            validateName = { name -> viewModel.validateName(name) },
-            validateEmail = { email -> viewModel.validateEmail(email) },
-            validateConfirmEmail = { confirmEmail -> viewModel.validateConfirmEmail(confirmEmail) },
+            sendUserDetails = { name, email, confirmEmail ->
+                viewModel.sendUserDetailsOnClick(
+                    name,
+                    email,
+                    confirmEmail
+                )
+            },
             done = { viewModel.dismissInviteDetailsDialogOnClick() },
             checkInviteStatus = { viewModel.checkInviteStatus() }
         )
@@ -129,13 +140,13 @@ class InvitationFragment : Fragment() {
         }
 
     private fun showPreInviteScreen() =
-        with (binding) {
+        with(binding) {
             linearlayoutInvited.visibility = GONE
             linearlayoutRequestInvite.visibility = VISIBLE
         }
 
     private fun showPostInviteScreen() =
-        with (binding) {
+        with(binding) {
             linearlayoutRequestInvite.visibility = GONE
             linearlayoutInvited.visibility = VISIBLE
         }

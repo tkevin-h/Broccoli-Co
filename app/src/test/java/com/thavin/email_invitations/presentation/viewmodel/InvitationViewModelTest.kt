@@ -15,7 +15,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-
 @OptIn(ExperimentalCoroutinesApi::class)
 class InvitationViewModelTest {
 
@@ -62,10 +61,7 @@ class InvitationViewModelTest {
     fun `sending user details returns a success`() = runTest {
         fakeRequestInviteUseCase.shouldReturnError(false)
 
-        viewModel.validateName("testName")
-        viewModel.validateEmail("testEmail@test.com")
-        viewModel.validateConfirmEmail("testEmail@test.com")
-        viewModel.sendUserDetailsOnClick("testName", "testEmail@test.com")
+        viewModel.sendUserDetailsOnClick("testName", "testEmail@test.com", "testEmail@test.com")
 
         viewModel.uiEvent.test {
             listOf(
@@ -84,10 +80,7 @@ class InvitationViewModelTest {
     @Test
     fun `sending user details returns an error`() = runTest {
         fakeRequestInviteUseCase.shouldReturnError(true)
-        viewModel.validateName("testName")
-        viewModel.validateEmail("testEmail@test.com")
-        viewModel.validateConfirmEmail("testEmail@test.com")
-        viewModel.sendUserDetailsOnClick("testName", "testEmail@test.com")
+        viewModel.sendUserDetailsOnClick("testName", "testEmail@test.com", "testEmail@test.com")
 
         viewModel.uiEvent.test {
             listOf(
@@ -104,33 +97,14 @@ class InvitationViewModelTest {
     }
 
     @Test
-    fun `validating name returns invalid`() = runTest {
-        viewModel.validateName("sam")
-
-        viewModel.uiEvent.test {
-            val emission = awaitItem()
-            assertThat(emission).isEqualTo(InvalidName)
-        }
-    }
-
-    @Test
-    fun `validating email returns invalid`() = runTest {
-        viewModel.validateEmail("test@test")
-
-        viewModel.uiEvent.test {
-            val emission = awaitItem()
-            assertThat(emission).isEqualTo(InvalidEmail)
-        }
-    }
-
-    @Test
-    fun `validating confirm email returns invalid`() = runTest {
-        viewModel.validateEmail("test@test.com")
-        viewModel.validateConfirmEmail("tester@test.com")
+    fun `sending invalid user details returns validation error`() = runTest {
+        fakeRequestInviteUseCase.shouldReturnError(true)
+        viewModel.sendUserDetailsOnClick("sam", "testEmail", "testEmail@test.com")
 
         viewModel.uiEvent.test {
             listOf(
-                ValidEmail,
+                InvalidName,
+                InvalidEmail,
                 InvalidConfirmEmail
             ).forEach { uiEvent ->
                 val emission = awaitItem()

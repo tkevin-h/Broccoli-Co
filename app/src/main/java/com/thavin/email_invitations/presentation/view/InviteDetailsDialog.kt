@@ -18,10 +18,7 @@ import com.bumptech.glide.Glide
 import com.thavin.email_invitations.R
 
 class InviteDetailsDialog(
-    private val sendUserDetails: (name: String, email: String) -> Unit,
-    private val validateName: (name: String) -> Unit,
-    private val validateEmail: (name: String) -> Unit,
-    private val validateConfirmEmail: (name: String) -> Unit,
+    private val sendUserDetails: (name: String, email: String, confirmEmail: String) -> Unit,
     private val done: () -> Unit,
     private val checkInviteStatus: () -> Unit
 ) : DialogFragment() {
@@ -40,12 +37,10 @@ class InviteDetailsDialog(
         binding.findViewById<Button>(R.id.button_request_invite).setOnClickListener {
             val name = binding.findViewById<EditText>(R.id.edittext_name).text.toString()
             val email = binding.findViewById<EditText>(R.id.edittext_email).text.toString()
-            val confirmEmail = binding.findViewById<EditText>(R.id.edittext_confirm_email).text.toString()
+            val confirmEmail =
+                binding.findViewById<EditText>(R.id.edittext_confirm_email).text.toString()
 
-            validateName(name)
-            validateEmail(email)
-            validateConfirmEmail(confirmEmail)
-            sendUserDetails(name, email)
+            sendUserDetails(name, email, confirmEmail)
         }
 
         binding.findViewById<Button>(R.id.button_success).setOnClickListener {
@@ -77,7 +72,8 @@ class InviteDetailsDialog(
     }
 
     fun setValidateConfirmEmailHintVisibility(visibility: Int) {
-        binding.findViewById<TextView>(R.id.textview_confirm_email_validation).visibility = visibility
+        binding.findViewById<TextView>(R.id.textview_confirm_email_validation).visibility =
+            visibility
     }
 
     fun showLoading() {
