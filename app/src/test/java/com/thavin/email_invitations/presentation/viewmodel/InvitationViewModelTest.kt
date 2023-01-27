@@ -19,17 +19,17 @@ import org.junit.Test
 class InvitationViewModelTest {
 
     private lateinit var viewModel: InvitationViewModel
-    private val testDispatcher = StandardTestDispatcher()
-    private val fakeRequestInviteUseCase = FakeRequestInviteUseCase()
-    private val fakeInviteStatusUseCase = FakeInviteStatusUseCase()
+    private val dispatcher = StandardTestDispatcher()
+    private val requestInviteUseCase = FakeRequestInviteUseCase()
+    private val inviteStatusUseCase = FakeInviteStatusUseCase()
 
     @Before
     fun beforeTests() {
         viewModel = InvitationViewModel(
-            fakeRequestInviteUseCase,
-            fakeInviteStatusUseCase
+            requestInviteUseCase,
+            inviteStatusUseCase
         )
-        Dispatchers.setMain(testDispatcher)
+        Dispatchers.setMain(dispatcher)
     }
 
     @After
@@ -59,7 +59,7 @@ class InvitationViewModelTest {
 
     @Test
     fun `sending user details returns a success`() = runTest {
-        fakeRequestInviteUseCase.shouldReturnError(false)
+        requestInviteUseCase.shouldReturnError(false)
 
         viewModel.sendUserDetailsOnClick("testName", "testEmail@test.com", "testEmail@test.com")
 
@@ -79,7 +79,7 @@ class InvitationViewModelTest {
 
     @Test
     fun `sending user details returns an error`() = runTest {
-        fakeRequestInviteUseCase.shouldReturnError(true)
+        requestInviteUseCase.shouldReturnError(true)
         viewModel.sendUserDetailsOnClick("testName", "testEmail@test.com", "testEmail@test.com")
 
         viewModel.uiEvent.test {
@@ -98,7 +98,7 @@ class InvitationViewModelTest {
 
     @Test
     fun `sending invalid user details returns validation error`() = runTest {
-        fakeRequestInviteUseCase.shouldReturnError(true)
+        requestInviteUseCase.shouldReturnError(true)
         viewModel.sendUserDetailsOnClick("sam", "testEmail", "testEmail@test.com")
 
         viewModel.uiEvent.test {
@@ -125,7 +125,7 @@ class InvitationViewModelTest {
 
     @Test
     fun `invited status displays the post invite screen`() = runTest {
-        fakeInviteStatusUseCase.setInvitedStatus(true)
+        inviteStatusUseCase.setInvitedStatus(true)
         viewModel.checkInviteStatus()
 
         viewModel.uiEvent.test {
@@ -136,7 +136,7 @@ class InvitationViewModelTest {
 
     @Test
     fun `not invited status returns the pre invite screen`() = runTest {
-        fakeInviteStatusUseCase.setInvitedStatus(false)
+        inviteStatusUseCase.setInvitedStatus(false)
         viewModel.checkInviteStatus()
 
         viewModel.uiEvent.test {

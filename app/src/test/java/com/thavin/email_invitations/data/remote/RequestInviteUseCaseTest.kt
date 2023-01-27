@@ -6,10 +6,7 @@ import com.thavin.email_invitations.data.remote.model.Result
 import com.thavin.email_invitations.data.remote.model.UserInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -26,9 +23,8 @@ import java.util.concurrent.TimeUnit
 @ExperimentalSerializationApi
 class RequestInviteUseCaseTest {
 
-    private val testDispatcher = StandardTestDispatcher()
-
-    private val mockWebServer = MockWebServer()
+    private val dispatcher = StandardTestDispatcher()
+    private val webServer = MockWebServer()
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(1, TimeUnit.SECONDS)
@@ -39,22 +35,22 @@ class RequestInviteUseCaseTest {
     private val json = Json { isLenient = true }
 
     private val api = Retrofit.Builder()
-        .baseUrl(mockWebServer.url("/"))
+        .baseUrl(webServer.url("/"))
         .client(client)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
         .create(RequestInviteApi::class.java)
 
-    private val usecase = RequestInviteUseCase(api)
+    private val requestInviteUseCase = RequestInviteUseCase(api)
 
     @Before
     fun beforeTests() {
-        Dispatchers.setMain(testDispatcher)
+        Dispatchers.setMain(dispatcher)
     }
 
     @After
     fun afterTests() {
-        mockWebServer.shutdown()
+        webServer.shutdown()
         Dispatchers.resetMain()
     }
 
@@ -64,10 +60,10 @@ class RequestInviteUseCaseTest {
             .setBody("registered")
             .setResponseCode(200)
 
-        mockWebServer.enqueue(response)
+        webServer.enqueue(response)
 
         val expectedResponse = Result.Success(message = "registered")
-        val actualResponse = usecase.requestInvite(UserInfo("John", "john@email.com"))
+        val actualResponse = requestInviteUseCase.requestInvite(UserInfo("John", "john@email.com"))
 
         assertThat(actualResponse).isEqualTo(expectedResponse)
     }
@@ -78,10 +74,10 @@ class RequestInviteUseCaseTest {
             .setBody("{\"errorMessage\": \"This email address is already in use\"}")
             .setResponseCode(400)
 
-        mockWebServer.enqueue(response)
+        webServer.enqueue(response)
 
         val expectedResponse = Result.Error(message = "This email address is already in use")
-        val actualResponse = usecase.requestInvite(UserInfo("John", "john@email.com"))
+        val actualResponse = requestInviteUseCase.requestInvite(UserInfo("John", "john@email.com"))
 
         assertThat(actualResponse).isEqualTo(expectedResponse)
     }
