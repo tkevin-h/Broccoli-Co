@@ -24,4 +24,22 @@ An app for requesting an invitation to the Broccoli &amp; Co. closed beta servic
 
 # Screens
 - `Pre Invite`:
-  - <img src="readme/pre_invite.png" width="300">
+  - <img src="readme/pre_invite.png" width="250">
+- `Post Invite`:
+  - <img src="readme/post_invite.png" width="250">
+- `User Details Dialog`:
+  - <img src="readme/user_details_dialog.png" width="250">
+- `User Details Valiation Dialog`:
+  - <img src="readme/user_details_validation_dialog.png" width="250">
+- `User Details Loading`:
+  - <img src="readme/user_details_loading.png" width="250">
+- `User Details Success`:
+  - <img src="readme/user_details_success.png" width="250">
+- `User Details Error`:
+  - <img src="readme/user_details_error.png" width="250">
+- `Cancel Invite Dialog`:
+  - <img src="readme/cancel_invite_dialog.png" width="250">
+- `Cancel Invite Success Dialog`:
+  - <img src="readme/cancel_invite_success.png" width="250">
+- `Splash Screen`:
+  - <img src="readme/splash_screen.png" width="250">
