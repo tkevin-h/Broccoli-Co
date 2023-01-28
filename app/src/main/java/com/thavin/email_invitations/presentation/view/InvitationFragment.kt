@@ -12,7 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.thavin.email_invitations.databinding.FragmentInvitationBinding
 import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel
-import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel.UiEvent.*
+import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel.InvitationUiEvent.*
+import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel.UserDetailsUiEvent.*
+import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel.CancelInviteUiEvent.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -43,7 +45,9 @@ class InvitationFragment : Fragment() {
         setupBinding()
         setupInviteDetailsDialog()
         setupCancelInviteDialog()
-        collectUiEvents()
+        collectInvitationUiEvents()
+        collectUserDetailsUiEvents()
+        collectCancelInviteUiEvents()
     }
 
     override fun onDestroyView() {
@@ -52,35 +56,51 @@ class InvitationFragment : Fragment() {
     }
 
     // Private Functions
-    private fun collectUiEvents() =
+    private fun collectInvitationUiEvents() =
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiEvent.collect {
+                viewModel.invitationUiEvent.collect {
                     when (it) {
                         is RequestInviteOnClick -> showInviteDetailsDialog()
-                        is InvalidName -> inviteDetailsDialog?.setValidateNameHintVisibility(VISIBLE)
-                        is ValidName -> inviteDetailsDialog?.setValidateNameHintVisibility(INVISIBLE)
-                        is InvalidEmail -> inviteDetailsDialog?.setValidateEmailHintVisibility(
-                            VISIBLE
-                        )
-                        is ValidEmail -> inviteDetailsDialog?.setValidateEmailHintVisibility(
-                            INVISIBLE
-                        )
-                        is InvalidConfirmEmail -> inviteDetailsDialog?.setValidateConfirmEmailHintVisibility(
-                            VISIBLE
-                        )
-                        is ValidConfirmEmail -> inviteDetailsDialog?.setValidateConfirmEmailHintVisibility(
-                            INVISIBLE
-                        )
-                        is InviteDetailsLoading -> inviteDetailsDialog?.showLoading()
-                        is InviteDetailsSuccess -> inviteDetailsDialog?.showSuccessDialog()
-                        is InviteDetailsError -> inviteDetailsDialog?.showError(it.message)
-                        is DismissInviteDetailsDialogOnClick -> inviteDetailsDialog?.dismissDialog()
                         is ShowPostInviteScreen -> showPostInviteScreen()
                         is ShowPreInviteScreen -> showPreInviteScreen()
-                        is CancelInviteOnClick -> showCancelInviteDialog()
-                        is CancelInviteSuccess -> cancelInviteDialog?.showSuccess()
-                        is DismissCancelInviteDialogOnClick -> cancelInviteDialog?.dismissDialog()
+                        is RequestCancelInviteOnClick -> showCancelInviteDialog()
+                    }
+                }
+            }
+        }
+
+    private fun collectUserDetailsUiEvents() =
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.userDetailsUiEvent.collect {
+                    inviteDetailsDialog?.run {
+                        when (it) {
+                            is InvalidName -> setValidateNameHintVisibility(VISIBLE)
+                            is ValidName -> setValidateNameHintVisibility(INVISIBLE)
+                            is InvalidEmail -> setValidateEmailHintVisibility(VISIBLE)
+                            is ValidEmail -> setValidateEmailHintVisibility(INVISIBLE)
+                            is InvalidConfirmEmail -> setValidateConfirmEmailHintVisibility(VISIBLE)
+                            is ValidConfirmEmail -> setValidateConfirmEmailHintVisibility(INVISIBLE)
+                            is InviteDetailsLoading -> showLoading()
+                            is InviteDetailsSuccess -> showSuccessDialog()
+                            is InviteDetailsError -> showError(it.message)
+                            is DismissInviteDetailsDialogOnClick -> dismissDialog()
+                        }
+                    }
+                }
+            }
+        }
+
+    private fun collectCancelInviteUiEvents() =
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.cancelInviteUiEvent.collect {
+                    cancelInviteDialog?.run {
+                        when (it) {
+                            is CancelInviteSuccess -> showSuccess()
+                            is DismissCancelInviteDialogOnClick -> dismissDialog()
+                        }
                     }
                 }
             }

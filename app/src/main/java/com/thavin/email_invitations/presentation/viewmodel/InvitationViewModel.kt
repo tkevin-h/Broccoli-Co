@@ -19,95 +19,116 @@ class InvitationViewModel @Inject constructor(
     private val inviteStatusRepository: InviteStatusRepository
 ) : ViewModel() {
 
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
+    private val _invitationInvitationUiEvent = Channel<InvitationUiEvent>()
+    val invitationUiEvent = _invitationInvitationUiEvent.receiveAsFlow()
 
-    sealed class UiEvent {
-        object RequestInviteOnClick : UiEvent()
+    private val _userDetailsUiEvent = Channel<UserDetailsUiEvent>()
+    val userDetailsUiEvent = _userDetailsUiEvent.receiveAsFlow()
 
-        object InvalidName : UiEvent()
-        object ValidName : UiEvent()
+    private val _cancelInviteUiEvent = Channel<CancelInviteUiEvent>()
+    val cancelInviteUiEvent = _cancelInviteUiEvent.receiveAsFlow()
 
-        object InvalidEmail : UiEvent()
+    sealed class InvitationUiEvent {
+        object RequestInviteOnClick : InvitationUiEvent()
 
-        object ValidEmail : UiEvent()
+        object ShowPostInviteScreen : InvitationUiEvent()
 
-        object InvalidConfirmEmail : UiEvent()
+        object ShowPreInviteScreen : InvitationUiEvent()
 
-        object ValidConfirmEmail : UiEvent()
+        object RequestCancelInviteOnClick : InvitationUiEvent()
+    }
 
-        object InviteDetailsLoading : UiEvent()
+    sealed class UserDetailsUiEvent {
+        object InvalidName : UserDetailsUiEvent()
+        object ValidName : UserDetailsUiEvent()
 
-        object InviteDetailsSuccess : UiEvent()
+        object InvalidEmail : UserDetailsUiEvent()
 
-        data class InviteDetailsError(val message: String?) : UiEvent()
+        object ValidEmail : UserDetailsUiEvent()
 
-        object DismissInviteDetailsDialogOnClick : UiEvent()
+        object InvalidConfirmEmail : UserDetailsUiEvent()
 
-        object ShowPostInviteScreen : UiEvent()
+        object ValidConfirmEmail : UserDetailsUiEvent()
 
-        object ShowPreInviteScreen : UiEvent()
+        object InviteDetailsLoading : UserDetailsUiEvent()
 
-        object CancelInviteOnClick : UiEvent()
+        object InviteDetailsSuccess : UserDetailsUiEvent()
 
-        object CancelInviteSuccess : UiEvent()
+        data class InviteDetailsError(val message: String?) : UserDetailsUiEvent()
 
-        object DismissCancelInviteDialogOnClick : UiEvent()
+        object DismissInviteDetailsDialogOnClick : UserDetailsUiEvent()
+    }
+
+    sealed class CancelInviteUiEvent {
+
+        object CancelInviteSuccess : CancelInviteUiEvent()
+
+        object DismissCancelInviteDialogOnClick : CancelInviteUiEvent()
     }
 
     // Public Functions
     fun requestInviteOnClick() {
-        sendUiEvent(UiEvent.RequestInviteOnClick)
+        sendInvitationUiEvent(InvitationUiEvent.RequestInviteOnClick)
     }
 
     fun requestCancelInviteOnClick() {
-        sendUiEvent(UiEvent.CancelInviteOnClick)
+        sendInvitationUiEvent(InvitationUiEvent.RequestCancelInviteOnClick)
     }
 
     fun sendUserDetailsOnClick(name: String, email: String, confirmEmail: String) {
         if (validateFields(name, email, confirmEmail)) {
-            sendUiEvent(UiEvent.InviteDetailsLoading)
+            sendUserDetailsUiEvent(UserDetailsUiEvent.InviteDetailsLoading)
             viewModelScope.launch {
                 when (val result = requestInviteRepository.requestInvite(
                     UserInfo(name = name, email = email)
                 )) {
                     is Result.Success -> {
                         inviteStatusRepository.setInviteStatus(true)
-                        sendUiEvent(UiEvent.InviteDetailsSuccess)
+                        sendUserDetailsUiEvent(UserDetailsUiEvent.InviteDetailsSuccess)
                     }
-                    is Result.Error -> sendUiEvent(UiEvent.InviteDetailsError(result.message))
+                    is Result.Error -> sendUserDetailsUiEvent(UserDetailsUiEvent.InviteDetailsError(result.message))
                 }
             }
         }
     }
 
     fun dismissInviteDetailsDialogOnClick() {
-        sendUiEvent(UiEvent.DismissInviteDetailsDialogOnClick)
+        sendUserDetailsUiEvent(UserDetailsUiEvent.DismissInviteDetailsDialogOnClick)
     }
 
     fun checkInviteStatus() =
         viewModelScope.launch {
             if (inviteStatusRepository.getInviteStatus()) {
-                sendUiEvent(UiEvent.ShowPostInviteScreen)
+                sendInvitationUiEvent(InvitationUiEvent.ShowPostInviteScreen)
             } else {
-                sendUiEvent(UiEvent.ShowPreInviteScreen)
+                sendInvitationUiEvent(InvitationUiEvent.ShowPreInviteScreen)
             }
         }
 
     fun cancelInviteOnClick() =
         viewModelScope.launch {
             inviteStatusRepository.setInviteStatus(false)
-            sendUiEvent(UiEvent.CancelInviteSuccess)
+            sendCancelUiEvent(CancelInviteUiEvent.CancelInviteSuccess)
         }
 
     fun dismissCancelInviteDialogOnClick() {
-        sendUiEvent(UiEvent.DismissCancelInviteDialogOnClick)
+        sendCancelUiEvent(CancelInviteUiEvent.DismissCancelInviteDialogOnClick)
     }
 
     // Private Functions
-    private fun sendUiEvent(event: UiEvent) =
+    private fun sendInvitationUiEvent(event: InvitationUiEvent) =
         viewModelScope.launch {
-            _uiEvent.send(event)
+            _invitationInvitationUiEvent.send(event)
+        }
+
+    private fun sendUserDetailsUiEvent(event: UserDetailsUiEvent) =
+        viewModelScope.launch {
+            _userDetailsUiEvent.send(event)
+        }
+
+    private fun sendCancelUiEvent(event: CancelInviteUiEvent) =
+        viewModelScope.launch {
+            _cancelInviteUiEvent.send(event)
         }
 
     private fun validateFields(name: String, email: String, confirmEmail: String): Boolean {
@@ -116,21 +137,21 @@ class InvitationViewModel @Inject constructor(
         val isConfirmEmailValid = validateConfirmEmail(confirmEmail, email)
 
         if (isNameValid) {
-            sendUiEvent(UiEvent.ValidName)
+            sendUserDetailsUiEvent(UserDetailsUiEvent.ValidName)
         } else {
-            sendUiEvent(UiEvent.InvalidName)
+            sendUserDetailsUiEvent(UserDetailsUiEvent.InvalidName)
         }
 
         if (isEmailValid) {
-            sendUiEvent(UiEvent.ValidEmail)
+            sendUserDetailsUiEvent(UserDetailsUiEvent.ValidEmail)
         } else {
-            sendUiEvent(UiEvent.InvalidEmail)
+            sendUserDetailsUiEvent(UserDetailsUiEvent.InvalidEmail)
         }
 
         if (isConfirmEmailValid) {
-            sendUiEvent(UiEvent.ValidConfirmEmail)
+            sendUserDetailsUiEvent(UserDetailsUiEvent.ValidConfirmEmail)
         } else {
-            sendUiEvent(UiEvent.InvalidConfirmEmail)
+            sendUserDetailsUiEvent(UserDetailsUiEvent.InvalidConfirmEmail)
         }
 
         return isNameValid && isEmailValid && isConfirmEmailValid

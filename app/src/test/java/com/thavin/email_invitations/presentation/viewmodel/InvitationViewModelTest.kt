@@ -4,7 +4,9 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.thavin.email_invitations.data.local.fake.FakeInviteStatusRepositoryImpl
 import com.thavin.email_invitations.data.remote.fake.FakeRequestInviteRepositoryImpl
-import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel.UiEvent.*
+import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel.InvitationUiEvent.*
+import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel.UserDetailsUiEvent.*
+import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel.CancelInviteUiEvent.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -41,7 +43,7 @@ class InvitationViewModelTest {
     fun `requesting an invite`() = runTest {
         viewModel.requestInviteOnClick()
 
-        viewModel.uiEvent.test {
+        viewModel.invitationUiEvent.test {
             val emission = awaitItem()
             assertThat(emission).isEqualTo(RequestInviteOnClick)
         }
@@ -51,9 +53,9 @@ class InvitationViewModelTest {
     fun `requesting to cancel an invite`() = runTest {
         viewModel.requestCancelInviteOnClick()
 
-        viewModel.uiEvent.test {
+        viewModel.invitationUiEvent.test {
             val emission = awaitItem()
-            assertThat(emission).isEqualTo(CancelInviteOnClick)
+            assertThat(emission).isEqualTo(RequestCancelInviteOnClick)
         }
     }
 
@@ -63,7 +65,7 @@ class InvitationViewModelTest {
 
         viewModel.sendUserDetailsOnClick("testName", "testEmail@test.com", "testEmail@test.com")
 
-        viewModel.uiEvent.test {
+        viewModel.userDetailsUiEvent.test {
             listOf(
                 ValidName,
                 ValidEmail,
@@ -82,7 +84,7 @@ class InvitationViewModelTest {
         requestInviteRepositoryImpl.shouldReturnError(true)
         viewModel.sendUserDetailsOnClick("testName", "testEmail@test.com", "testEmail@test.com")
 
-        viewModel.uiEvent.test {
+        viewModel.userDetailsUiEvent.test {
             listOf(
                 ValidName,
                 ValidEmail,
@@ -101,7 +103,7 @@ class InvitationViewModelTest {
         requestInviteRepositoryImpl.shouldReturnError(true)
         viewModel.sendUserDetailsOnClick("sam", "testEmail", "testEmail@test.com")
 
-        viewModel.uiEvent.test {
+        viewModel.userDetailsUiEvent.test {
             listOf(
                 InvalidName,
                 InvalidEmail,
@@ -117,7 +119,7 @@ class InvitationViewModelTest {
     fun `dismissing the invite details dialog`() = runTest {
         viewModel.dismissInviteDetailsDialogOnClick()
 
-        viewModel.uiEvent.test {
+        viewModel.userDetailsUiEvent.test {
             val emission = awaitItem()
             assertThat(emission).isEqualTo(DismissInviteDetailsDialogOnClick)
         }
@@ -128,7 +130,7 @@ class InvitationViewModelTest {
         inviteStatusRepositoryImpl.setInvitedStatus(true)
         viewModel.checkInviteStatus()
 
-        viewModel.uiEvent.test {
+        viewModel.invitationUiEvent.test {
             val emission = awaitItem()
             assertThat(emission).isEqualTo(ShowPostInviteScreen)
         }
@@ -139,7 +141,7 @@ class InvitationViewModelTest {
         inviteStatusRepositoryImpl.setInvitedStatus(false)
         viewModel.checkInviteStatus()
 
-        viewModel.uiEvent.test {
+        viewModel.invitationUiEvent.test {
             val emission = awaitItem()
             assertThat(emission).isEqualTo(ShowPreInviteScreen)
         }
@@ -149,7 +151,7 @@ class InvitationViewModelTest {
     fun `cancelling a current invite`() = runTest {
         viewModel.cancelInviteOnClick()
 
-        viewModel.uiEvent.test {
+        viewModel.cancelInviteUiEvent.test {
             val emission = awaitItem()
             assertThat(emission).isEqualTo(CancelInviteSuccess)
         }
@@ -159,7 +161,7 @@ class InvitationViewModelTest {
     fun `dismissing the cancel invite dialog`() = runTest {
         viewModel.dismissCancelInviteDialogOnClick()
 
-        viewModel.uiEvent.test {
+        viewModel.cancelInviteUiEvent.test {
             val emission = awaitItem()
             assertThat(emission).isEqualTo(DismissCancelInviteDialogOnClick)
         }
