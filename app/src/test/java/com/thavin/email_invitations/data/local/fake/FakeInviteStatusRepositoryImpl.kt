@@ -2,7 +2,7 @@ package com.thavin.email_invitations.data.local.fake
 
 import com.thavin.email_invitations.data.local.repository.InviteStatusRepository
 
-class FakeInviteStatusUseCase : InviteStatusRepository {
+class FakeInviteStatusRepositoryImpl : InviteStatusRepository {
 
     private var shouldReturnInvited = false
 

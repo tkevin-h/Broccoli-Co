@@ -14,7 +14,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="32dp">
+            android:padding="@dimen/large">
 
             <EditText
                 android:id="@+id/edittext_name"
@@ -75,7 +75,7 @@
                 android:id="@+id/textview_confirm_email_validation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="@dimen/medium"
                 android:text="@string/confirm_email_validation_hint"
                 android:textColor="@color/red"
                 android:visibility="invisible"
@@ -87,7 +87,7 @@
                 android:id="@+id/textview_send_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="@dimen/medium"
                 android:text="@string/send_details_generic_error"
                 android:textColor="@color/red"
                 android:visibility="invisible"
@@ -127,7 +127,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="32dp">
+            android:padding="@dimen/large">
 
             <TextView
                 android:id="@+id/textview_success"
@@ -145,7 +145,7 @@
                 android:id="@+id/imageview_success"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/small"
                 android:contentDescription="@string/image_accessibility_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

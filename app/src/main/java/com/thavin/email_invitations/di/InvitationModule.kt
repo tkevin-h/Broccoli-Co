@@ -10,10 +10,10 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.thavin.email_invitations.data.local.repository.InviteStatusRepository
-import com.thavin.email_invitations.data.local.InviteStatusUseCase
+import com.thavin.email_invitations.data.local.InviteStatusRepositoryImpl
 import com.thavin.email_invitations.data.remote.RequestInviteApi
 import com.thavin.email_invitations.data.remote.repository.RequestInviteRepository
-import com.thavin.email_invitations.data.remote.RequestInviteUseCase
+import com.thavin.email_invitations.data.remote.RequestInviteRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,7 +53,7 @@ object InvitationModule {
     @Provides
     @Singleton
     fun provideInvitationRepository(requestInviteApi: RequestInviteApi): RequestInviteRepository {
-        return RequestInviteUseCase(requestInviteApi)
+        return RequestInviteRepositoryImpl(requestInviteApi)
     }
 
     @Provides
@@ -94,6 +94,6 @@ object InvitationModule {
     @Provides
     @Singleton
     fun provideUserPreferencesRepository(dataStore: DataStore<Preferences>): InviteStatusRepository {
-        return InviteStatusUseCase(dataStore)
+        return InviteStatusRepositoryImpl(dataStore)
     }
 }

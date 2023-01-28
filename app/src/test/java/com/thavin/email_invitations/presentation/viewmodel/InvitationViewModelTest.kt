@@ -2,8 +2,8 @@ package com.thavin.email_invitations.presentation.viewmodel
 
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
-import com.thavin.email_invitations.data.local.fake.FakeInviteStatusUseCase
-import com.thavin.email_invitations.data.remote.fake.FakeRequestInviteUseCase
+import com.thavin.email_invitations.data.local.fake.FakeInviteStatusRepositoryImpl
+import com.thavin.email_invitations.data.remote.fake.FakeRequestInviteRepositoryImpl
 import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel.UiEvent.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,14 +20,14 @@ class InvitationViewModelTest {
 
     private lateinit var viewModel: InvitationViewModel
     private val dispatcher = StandardTestDispatcher()
-    private val requestInviteUseCase = FakeRequestInviteUseCase()
-    private val inviteStatusUseCase = FakeInviteStatusUseCase()
+    private val requestInviteRepositoryImpl = FakeRequestInviteRepositoryImpl()
+    private val inviteStatusRepositoryImpl = FakeInviteStatusRepositoryImpl()
 
     @Before
     fun beforeTests() {
         viewModel = InvitationViewModel(
-            requestInviteUseCase,
-            inviteStatusUseCase
+            requestInviteRepositoryImpl,
+            inviteStatusRepositoryImpl
         )
         Dispatchers.setMain(dispatcher)
     }
@@ -59,7 +59,7 @@ class InvitationViewModelTest {
 
     @Test
     fun `sending user details returns a success`() = runTest {
-        requestInviteUseCase.shouldReturnError(false)
+        requestInviteRepositoryImpl.shouldReturnError(false)
 
         viewModel.sendUserDetailsOnClick("testName", "testEmail@test.com", "testEmail@test.com")
 
@@ -79,7 +79,7 @@ class InvitationViewModelTest {
 
     @Test
     fun `sending user details returns an error`() = runTest {
-        requestInviteUseCase.shouldReturnError(true)
+        requestInviteRepositoryImpl.shouldReturnError(true)
         viewModel.sendUserDetailsOnClick("testName", "testEmail@test.com", "testEmail@test.com")
 
         viewModel.uiEvent.test {
@@ -98,7 +98,7 @@ class InvitationViewModelTest {
 
     @Test
     fun `sending invalid user details returns validation error`() = runTest {
-        requestInviteUseCase.shouldReturnError(true)
+        requestInviteRepositoryImpl.shouldReturnError(true)
         viewModel.sendUserDetailsOnClick("sam", "testEmail", "testEmail@test.com")
 
         viewModel.uiEvent.test {
@@ -125,7 +125,7 @@ class InvitationViewModelTest {
 
     @Test
     fun `invited status displays the post invite screen`() = runTest {
-        inviteStatusUseCase.setInvitedStatus(true)
+        inviteStatusRepositoryImpl.setInvitedStatus(true)
         viewModel.checkInviteStatus()
 
         viewModel.uiEvent.test {
@@ -136,7 +136,7 @@ class InvitationViewModelTest {
 
     @Test
     fun `not invited status returns the pre invite screen`() = runTest {
-        inviteStatusUseCase.setInvitedStatus(false)
+        inviteStatusRepositoryImpl.setInvitedStatus(false)
         viewModel.checkInviteStatus()
 
         viewModel.uiEvent.test {

@@ -13,7 +13,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="32dp">
+            android:padding="@dimen/large">
 
             <TextView
                 android:id="@+id/textview_cancel_title"
@@ -30,7 +30,7 @@
                 android:id="@+id/textview_cancel_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="@dimen/medium"
                 android:gravity="center"
                 android:text="@string/cancel_invite_description"
                 app:layout_constraintBottom_toTopOf="@id/button_cancel"
@@ -41,7 +41,7 @@
                 android:id="@+id/button_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/small"
                 android:text="@string/button_cancel"
                 app:layout_constraintBottom_toTopOf="@id/button_confirm_cancel"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -67,7 +67,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="32dp">
+            android:padding="@dimen/large">
 
             <TextView
                 android:id="@+id/textview_cancel_success"
@@ -85,7 +85,7 @@
                 android:id="@+id/imageview_cancel_success"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/small"
                 android:contentDescription="@string/image_accessibility_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

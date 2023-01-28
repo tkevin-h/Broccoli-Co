@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-class InviteStatusUseCaseTest {
+class InviteStatusRepositoryImplTest {
 
     private val dispatcher = StandardTestDispatcher()
     private val scope = TestScope(dispatcher + Job())
@@ -29,7 +29,7 @@ class InviteStatusUseCaseTest {
         produceFile = { context.preferencesDataStoreFile("test_user_preferences") }
     )
 
-    private val inviteStatusUseCase = InviteStatusUseCase(dataStore)
+    private val inviteStatusRepositoryImpl = InviteStatusRepositoryImpl(dataStore)
 
     @Before
     fun beforeTests() {
@@ -47,8 +47,8 @@ class InviteStatusUseCaseTest {
         val expectedStatus = true
 
         scope.runTest {
-            inviteStatusUseCase.setInviteStatus(true)
-            val actualStatus = inviteStatusUseCase.getInviteStatus()
+            inviteStatusRepositoryImpl.setInviteStatus(true)
+            val actualStatus = inviteStatusRepositoryImpl.getInviteStatus()
             assertThat(actualStatus).isEqualTo(expectedStatus)
 
             dataStore.edit { it.clear() }
@@ -60,8 +60,8 @@ class InviteStatusUseCaseTest {
         val expectedStatus = false
 
         scope.runTest {
-            inviteStatusUseCase.setInviteStatus(false)
-            val actualStatus = inviteStatusUseCase.getInviteStatus()
+            inviteStatusRepositoryImpl.setInviteStatus(false)
+            val actualStatus = inviteStatusRepositoryImpl.getInviteStatus()
             assertThat(actualStatus).isEqualTo(expectedStatus)
 
             dataStore.edit { it.clear() }

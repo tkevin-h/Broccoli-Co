@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class RequestInviteUseCase(
+class RequestInviteRepositoryImpl(
     private val requestInviteApi: RequestInviteApi
 ) : RequestInviteRepository {
 

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"
-        android:padding="24dp"
+        android:padding="@dimen/medium"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -23,7 +23,7 @@
             android:id="@+id/textview_heading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
+            android:paddingBottom="@dimen/small"
             android:textStyle="bold"
             android:textSize="16sp"
             android:text="@string/broccoli_co_title" />
@@ -32,9 +32,9 @@
             android:id="@+id/textview_subtext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:paddingBottom="16dp"
+            android:layout_marginLeft="@dimen/medium"
+            android:layout_marginRight="@dimen/medium"
+            android:paddingBottom="@dimen/small"
             android:gravity="center"
             android:text="@string/broccoli_co_description" />
 
@@ -50,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:padding="24dp"
+        android:padding="@dimen/medium"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -62,7 +62,7 @@
             android:id="@+id/textview_invited_heading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
+            android:paddingBottom="@dimen/small"
             android:textStyle="bold"
             android:textSize="16sp"
             android:text="@string/broccoli_co_title" />
@@ -71,9 +71,9 @@
             android:id="@+id/textview_invited__subtext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:paddingBottom="16dp"
+            android:layout_marginLeft="@dimen/medium"
+            android:layout_marginRight="@dimen/medium"
+            android:paddingBottom="@dimen/small"
             android:gravity="center"
             android:text="@string/broccoli_co_invited_description" />
 

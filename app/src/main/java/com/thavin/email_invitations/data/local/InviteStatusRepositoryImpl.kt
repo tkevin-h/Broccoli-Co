@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class InviteStatusUseCase(
+class InviteStatusRepositoryImpl(
     private val dataStore: DataStore<Preferences>
 ) : InviteStatusRepository {
 

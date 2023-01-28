@@ -4,7 +4,7 @@ import com.thavin.email_invitations.data.remote.model.Result
 import com.thavin.email_invitations.data.remote.model.UserInfo
 import com.thavin.email_invitations.data.remote.repository.RequestInviteRepository
 
-class FakeRequestInviteUseCase : RequestInviteRepository {
+class FakeRequestInviteRepositoryImpl : RequestInviteRepository {
 
     private var shouldReturnError = false
 

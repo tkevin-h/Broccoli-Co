@@ -37,6 +37,8 @@ An app for requesting an invitation to the Broccoli &amp; Co. closed beta servic
   - <img src="readme/user_details_success.png" width="250">
 - `User Details Error`:
   - <img src="readme/user_details_error.png" width="250">
+- `User Details Error`:
+  - <img src="readme/user_details_network_error.png" width="250">
 - `Cancel Invite Dialog`:
   - <img src="readme/cancel_invite_dialog.png" width="250">
 - `Cancel Invite Success Dialog`:

@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
 
 @ExperimentalCoroutinesApi
 @ExperimentalSerializationApi
-class RequestInviteUseCaseTest {
+class RequestInviteRepositoryImplTest {
 
     private val dispatcher = StandardTestDispatcher()
     private val webServer = MockWebServer()
@@ -41,7 +41,7 @@ class RequestInviteUseCaseTest {
         .build()
         .create(RequestInviteApi::class.java)
 
-    private val requestInviteUseCase = RequestInviteUseCase(api)
+    private val requestInviteRepositoryImpl = RequestInviteRepositoryImpl(api)
 
     @Before
     fun beforeTests() {
@@ -63,7 +63,7 @@ class RequestInviteUseCaseTest {
         webServer.enqueue(response)
 
         val expectedResponse = Result.Success(message = "registered")
-        val actualResponse = requestInviteUseCase.requestInvite(UserInfo("John", "john@email.com"))
+        val actualResponse = requestInviteRepositoryImpl.requestInvite(UserInfo("John", "john@email.com"))
 
         assertThat(actualResponse).isEqualTo(expectedResponse)
     }
@@ -77,7 +77,7 @@ class RequestInviteUseCaseTest {
         webServer.enqueue(response)
 
         val expectedResponse = Result.Error(message = "This email address is already in use")
-        val actualResponse = requestInviteUseCase.requestInvite(UserInfo("John", "john@email.com"))
+        val actualResponse = requestInviteRepositoryImpl.requestInvite(UserInfo("John", "john@email.com"))
 
         assertThat(actualResponse).isEqualTo(expectedResponse)
     }
