@@ -1,4 +1,4 @@
-package com.thavin.email_invitations.data.remote.model
+package com.thavin.email_invitations.data.remote.request_invite.dto
 
 import kotlinx.serialization.Serializable
 

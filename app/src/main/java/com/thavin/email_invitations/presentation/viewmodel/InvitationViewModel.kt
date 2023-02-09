@@ -4,9 +4,12 @@ import androidx.core.util.PatternsCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thavin.email_invitations.data.local.repository.InviteStatusRepository
-import com.thavin.email_invitations.data.remote.repository.RequestInviteRepository
-import com.thavin.email_invitations.data.remote.model.Result
-import com.thavin.email_invitations.data.remote.model.UserInfo
+import com.thavin.email_invitations.data.remote.request_invite.repository.RequestInviteRepository
+import com.thavin.email_invitations.data.remote.request_invite.model.RequestInviteResource
+import com.thavin.email_invitations.data.remote.cat_facts.model.CatFactsResource
+import com.thavin.email_invitations.data.remote.cat_facts.repository.CatFactsRepository
+import com.thavin.email_invitations.data.remote.request_invite.dto.UserInfo
+import com.thavin.email_invitations.data.remote.cat_facts.model.CatFacts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -16,11 +19,15 @@ import javax.inject.Inject
 @HiltViewModel
 class InvitationViewModel @Inject constructor(
     private val requestInviteRepository: RequestInviteRepository,
-    private val inviteStatusRepository: InviteStatusRepository
+    private val inviteStatusRepository: InviteStatusRepository,
+    private val catFactsRepository: CatFactsRepository
 ) : ViewModel() {
 
-    private val _invitationInvitationUiEvent = Channel<InvitationUiEvent>()
-    val invitationUiEvent = _invitationInvitationUiEvent.receiveAsFlow()
+    private val _invitationUiEvent = Channel<InvitationUiEvent>()
+    val invitationUiEvent = _invitationUiEvent.receiveAsFlow()
+
+    private val _catFactsUiEvent = Channel<CatFactsUiEvent>()
+    val astroUiEvent = _catFactsUiEvent.receiveAsFlow()
 
     private val _userDetailsUiEvent = Channel<UserDetailsUiEvent>()
     val userDetailsUiEvent = _userDetailsUiEvent.receiveAsFlow()
@@ -36,6 +43,12 @@ class InvitationViewModel @Inject constructor(
         object ShowPreInviteScreen : InvitationUiEvent()
 
         object RequestCancelInviteOnClick : InvitationUiEvent()
+    }
+
+    sealed class CatFactsUiEvent {
+        object ShowLoading : CatFactsUiEvent()
+        data class ShowCatFactsList(val facts: MutableList<CatFacts>?) : CatFactsUiEvent()
+        object ShowError : CatFactsUiEvent()
     }
 
     sealed class UserDetailsUiEvent {
@@ -82,11 +95,16 @@ class InvitationViewModel @Inject constructor(
                 when (val result = requestInviteRepository.requestInvite(
                     UserInfo(name = name, email = email)
                 )) {
-                    is Result.Success -> {
+                    is RequestInviteResource.Success -> {
                         inviteStatusRepository.setInviteStatus(true)
                         sendUserDetailsUiEvent(UserDetailsUiEvent.InviteDetailsSuccess)
                     }
-                    is Result.Error -> sendUserDetailsUiEvent(UserDetailsUiEvent.InviteDetailsError(result.message))
+                    is RequestInviteResource.Error -> sendUserDetailsUiEvent(
+                        UserDetailsUiEvent.InviteDetailsError(
+                            result.message
+                        )
+                    )
+                    else -> {}
                 }
             }
         }
@@ -115,10 +133,26 @@ class InvitationViewModel @Inject constructor(
         sendCancelUiEvent(CancelInviteUiEvent.DismissCancelInviteDialogOnClick)
     }
 
+    fun getAstros() {
+        viewModelScope.launch {
+            catFactsRepository.getCatFacts().collect {
+                when (it) {
+                    is CatFactsResource.Loading -> _catFactsUiEvent.send(CatFactsUiEvent.ShowLoading)
+                    is CatFactsResource.Success -> _catFactsUiEvent.send(
+                        CatFactsUiEvent.ShowCatFactsList(
+                            it.facts
+                        )
+                    )
+                    is CatFactsResource.Error -> _catFactsUiEvent.send(CatFactsUiEvent.ShowError)
+                }
+            }
+        }
+    }
+
     // Private Functions
     private fun sendInvitationUiEvent(event: InvitationUiEvent) =
         viewModelScope.launch {
-            _invitationInvitationUiEvent.send(event)
+            _invitationUiEvent.send(event)
         }
 
     private fun sendUserDetailsUiEvent(event: UserDetailsUiEvent) =

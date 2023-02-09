@@ -1,6 +1,6 @@
-package com.thavin.email_invitations.data.remote
+package com.thavin.email_invitations.data.remote.request_invite
 
-import com.thavin.email_invitations.data.remote.model.UserInfo
+import com.thavin.email_invitations.data.remote.request_invite.dto.UserInfo
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers

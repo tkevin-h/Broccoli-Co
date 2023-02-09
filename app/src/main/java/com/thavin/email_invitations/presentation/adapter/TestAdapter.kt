@@ -8,24 +8,24 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thavin.email_invitations.R
-import com.thavin.email_invitations.presentation.model.ListItem
+import com.thavin.email_invitations.data.remote.cat_facts.model.CatFacts
 
 class TestAdapter :
-    ListAdapter<ListItem, TestAdapter.TestViewHolder>(TestDiffCallback) {
+    ListAdapter<CatFacts, TestAdapter.TestViewHolder>(TestDiffCallback) {
 
     class TestViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val text: TextView = itemView.findViewById(R.id.itemview_heading)
-        private var currentItem: ListItem? = null
+        private val text: TextView = itemView.findViewById(R.id.text_view_fact)
+        private var currentItem: CatFacts? = null
 
-        fun bind(test: ListItem) {
-            currentItem = test
-            text.text = test.name
+        fun bind(facts: CatFacts) {
+            currentItem = facts
+            text.text = facts.fact
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TestViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_test, parent, false)
+            .inflate(R.layout.item_cat_facts, parent, false)
 
         return TestViewHolder(view)
     }
@@ -36,12 +36,12 @@ class TestAdapter :
     }
 }
 
-object TestDiffCallback : DiffUtil.ItemCallback<ListItem>() {
-    override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
+object TestDiffCallback : DiffUtil.ItemCallback<CatFacts>() {
+    override fun areItemsTheSame(oldItem: CatFacts, newItem: CatFacts): Boolean {
         return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
+    override fun areContentsTheSame(oldItem: CatFacts, newItem: CatFacts): Boolean {
         return oldItem.id == newItem.id
     }
 }

@@ -2,8 +2,10 @@ package com.thavin.email_invitations.data.remote
 
 import com.google.common.truth.Truth.assertThat
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.thavin.email_invitations.data.remote.model.Result
-import com.thavin.email_invitations.data.remote.model.UserInfo
+import com.thavin.email_invitations.data.remote.request_invite.model.RequestInviteResource
+import com.thavin.email_invitations.data.remote.request_invite.dto.UserInfo
+import com.thavin.email_invitations.data.remote.request_invite.RequestInviteRepositoryImpl
+import com.thavin.email_invitations.data.remote.request_invite.RequestInviteApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
@@ -62,7 +64,7 @@ class RequestInviteRepositoryImplTest {
 
         webServer.enqueue(response)
 
-        val expectedResponse = Result.Success(message = "registered")
+        val expectedResponse = RequestInviteResource.Success(message = "registered")
         val actualResponse = requestInviteRepositoryImpl.requestInvite(UserInfo("John", "john@email.com"))
 
         assertThat(actualResponse).isEqualTo(expectedResponse)
@@ -76,7 +78,7 @@ class RequestInviteRepositoryImplTest {
 
         webServer.enqueue(response)
 
-        val expectedResponse = Result.Error(message = "This email address is already in use")
+        val expectedResponse = RequestInviteResource.Error(message = "This email address is already in use")
         val actualResponse = requestInviteRepositoryImpl.requestInvite(UserInfo("John", "john@email.com"))
 
         assertThat(actualResponse).isEqualTo(expectedResponse)

@@ -17,9 +17,9 @@
     </fragment>
     <fragment
         android:id="@+id/TestFragment"
-        android:name="com.thavin.email_invitations.presentation.view.TestFragment"
+        android:name="com.thavin.email_invitations.presentation.view.CatFactsFragment"
         android:label="@string/email_invitation_fragment_label"
-        tools:layout="@layout/fragment_test">
+        tools:layout="@layout/fragment_cat_facts">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"

@@ -11,9 +11,12 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.thavin.email_invitations.data.local.repository.InviteStatusRepository
 import com.thavin.email_invitations.data.local.InviteStatusRepositoryImpl
-import com.thavin.email_invitations.data.remote.RequestInviteApi
-import com.thavin.email_invitations.data.remote.repository.RequestInviteRepository
-import com.thavin.email_invitations.data.remote.RequestInviteRepositoryImpl
+import com.thavin.email_invitations.data.remote.cat_facts.CatFactsApi
+import com.thavin.email_invitations.data.remote.cat_facts.CatFactsRepositoryImpl
+import com.thavin.email_invitations.data.remote.cat_facts.repository.CatFactsRepository
+import com.thavin.email_invitations.data.remote.request_invite.RequestInviteApi
+import com.thavin.email_invitations.data.remote.request_invite.repository.RequestInviteRepository
+import com.thavin.email_invitations.data.remote.request_invite.RequestInviteRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,6 +57,24 @@ object InvitationModule {
     @Singleton
     fun provideInvitationRepository(requestInviteApi: RequestInviteApi): RequestInviteRepository {
         return RequestInviteRepositoryImpl(requestInviteApi)
+    }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    @Provides
+    @Singleton
+    fun providePeopleInSpaceApi(json: Json, client: OkHttpClient): CatFactsApi {
+        return Retrofit.Builder()
+            .baseUrl(CatFactsApi.BASE_URL)
+            .addConverterFactory(json.asConverterFactory(APPLICATION_JSON.toMediaType()))
+            .client(client)
+            .build()
+            .create(CatFactsApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePeopleInSpaceRepository(catFactsApi: CatFactsApi): CatFactsRepository {
+        return CatFactsRepositoryImpl(catFactsApi)
     }
 
     @Provides
