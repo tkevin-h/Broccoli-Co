@@ -6,10 +6,13 @@ import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import com.thavin.email_invitations.R
 import com.thavin.email_invitations.databinding.FragmentInvitationBinding
 import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel
 import com.thavin.email_invitations.presentation.viewmodel.InvitationViewModel.InvitationUiEvent.*
@@ -21,7 +24,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class InvitationFragment : Fragment() {
 
-    private val viewModel: InvitationViewModel by viewModels()
+    private val viewModel: InvitationViewModel by activityViewModels()
 
     private var _binding: FragmentInvitationBinding? = null
     private val binding get() = _binding!!
@@ -65,6 +68,7 @@ class InvitationFragment : Fragment() {
                         is ShowPostInviteScreen -> showPostInviteScreen()
                         is ShowPreInviteScreen -> showPreInviteScreen()
                         is RequestCancelInviteOnClick -> showCancelInviteDialog()
+                        else -> {}
                     }
                 }
             }
@@ -114,6 +118,10 @@ class InvitationFragment : Fragment() {
 
             buttonCancelInvite.setOnClickListener {
                 viewModel.requestCancelInviteOnClick()
+            }
+
+            buttonSettings.setOnClickListener {
+                findNavController().navigate(R.id.action_EmailInvitationFragment_to_TestFragment)
             }
         }
 

@@ -6,14 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".presentation.InvitationActivity">
 
+    <Button
+        android:id="@+id/button_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_settings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearlayout_request_invite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:padding="@dimen/medium"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:padding="@dimen/medium"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,9 +32,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/small"
-            android:textStyle="bold"
+            android:text="@string/broccoli_co_title"
             android:textSize="16sp"
-            android:text="@string/broccoli_co_title" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textview_subtext"
@@ -34,8 +42,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/medium"
             android:layout_marginRight="@dimen/medium"
-            android:paddingBottom="@dimen/small"
             android:gravity="center"
+            android:paddingBottom="@dimen/small"
             android:text="@string/broccoli_co_description" />
 
         <Button
@@ -49,10 +57,10 @@
         android:id="@+id/linearlayout_invited"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:padding="@dimen/medium"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:padding="@dimen/medium"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,9 +71,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/small"
-            android:textStyle="bold"
+            android:text="@string/broccoli_co_title"
             android:textSize="16sp"
-            android:text="@string/broccoli_co_title" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textview_invited__subtext"
@@ -73,8 +81,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/medium"
             android:layout_marginRight="@dimen/medium"
-            android:paddingBottom="@dimen/small"
             android:gravity="center"
+            android:paddingBottom="@dimen/small"
             android:text="@string/broccoli_co_invited_description" />
 
         <Button
